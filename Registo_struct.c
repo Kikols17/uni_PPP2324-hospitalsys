@@ -12,5 +12,12 @@ Registo *createRegisto() {
     return malloc(sizeof(Registo));
 }
 
+#ifndef main
+int main() {
+    return 0;
+}
+#endif
+
+
 
 #endif

@@ -17,4 +17,11 @@ void toFile_Doente(struct Doente *doente, FILE *fd) {
     fprintf(fd, "%d\n%s\n%s\n%d\n%d\n%s", doente->id, doente->name, doente->birthday.str, doente->cc, doente->tele, doente->email);
 }
 
+#ifndef main
+int main() {
+    return 0;
+}
+#endif
+
+
 #endif

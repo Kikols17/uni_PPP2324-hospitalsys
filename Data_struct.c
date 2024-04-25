@@ -24,4 +24,11 @@ void toString_Data(struct Data *date) {
     sprintf(date->str, "%d/%d/%d", date->day, date->month, date->year);
 }
 
+#ifndef main
+int main() {
+    return 0;
+}
+#endif
+
+
 #endif
