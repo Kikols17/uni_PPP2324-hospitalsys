@@ -17,6 +17,7 @@ typedef struct Doente {
 
 
 struct Doente *createDoente();
+void toFile_Doente(struct Doente *doente, FILE *fd);
 
 
 

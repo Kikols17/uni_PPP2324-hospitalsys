@@ -12,4 +12,9 @@ struct Doente *createDoente() {
     return malloc(sizeof(Doente));
 }
 
+void toFile_Doente(struct Doente *doente, FILE *fd) {
+    toString_Data(&doente->birthday);
+    fprintf(fd, "%d\n%s\n%s\n%d\n%d\n%s", doente->id, doente->name, doente->birthday.str, doente->cc, doente->tele, doente->email);
+}
+
 #endif

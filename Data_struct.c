@@ -20,8 +20,8 @@ struct Data *createData(int year, int month, int day) {
 }
 
 
-void toString(struct Data *date, char *buff) {
-    fprintf(buff, "%d/%d/%d", date->day, date->month, date->year);
+void toString_Data(struct Data *date) {
+    sprintf(date->str, "%d/%d/%d", date->day, date->month, date->year);
 }
 
 #endif
