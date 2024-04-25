@@ -19,4 +19,9 @@ struct Data *createData(int year, int month, int day) {
     return new_Data;
 }
 
+
+void toString(struct Data *date, char *buff) {
+    fprintf(buff, "%d/%d/%d", date->day, date->month, date->year);
+}
+
 #endif

@@ -9,5 +9,6 @@ typedef struct Data {
 
 
 struct Data *createData();
+void toString(struct Data date, char *buff);
 
 #endif
