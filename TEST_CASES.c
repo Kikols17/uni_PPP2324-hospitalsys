@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "Data_struct.h"
 #include "Registo_struct.h"
@@ -20,8 +21,12 @@ int main() {
         return -1;
     }
 
-    // test "struct Data"'s "toString_Data"
+    // test "struct Data"'s "toData_str"
     char buff[DATA_STRING_SIZE];
+    strcpy(buff, "40/1");
+    
+
+    // test "struct Data"'s "toString_Data"
     toString_Data(test_data, buff);
     fprintf(stdout, "TEST_DATA string:\n\texpected:\t31/12/2024\n\tgot:\t%s\n", buff);
 

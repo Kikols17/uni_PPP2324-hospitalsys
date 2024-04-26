@@ -34,6 +34,9 @@ int toData_str(char *str, struct Data *date) {
     if (day==NULL || month==NULL || year==NULL) {
         return -1;
     }
+    if ((atoi(month)>12 || atoi(month)<1)) {
+        
+    }
 
     date->day = atoi(day);
     date->month = atoi(month);
