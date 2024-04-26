@@ -36,7 +36,7 @@ int main() {
         return -1;
     }
     toString_Data(test_data);
-    fprintf(stdout, "TEST_DATA:\n\texpected:\t31/12/2024\n\tgot:\t%s\n", test_data->str);
+    fprintf(stdout, "TEST_DATA string:\n\texpected:\t31/12/2024\n\tgot:\t%s\n", test_data->str);
     return 0;
 }
 #endif
