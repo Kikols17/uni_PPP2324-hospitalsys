@@ -21,11 +21,13 @@ struct Data *createData(int year, int month, int day) {
 
 
 void toString_Data(struct Data *date) {
+    /* Convert "Data" to char array */
     sprintf(date->str, "%d/%d/%d", date->day, date->month, date->year);
 }
 
 #ifndef main
 int main() {
+    /* Test Case for "Data_struct" */
     struct Data *test_data = createData(2024, 12, 31);
     toString_Data(test_data);
     fprintf(stdout, "TEST_DATA:\n\texpected:\t31/12/2024\n\tgot:\t%s\n", test_data->str);

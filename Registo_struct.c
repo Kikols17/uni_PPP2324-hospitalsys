@@ -14,6 +14,7 @@ Registo *createRegisto() {
 
 #ifndef main
 int main() {
+    /* Test Case for "Regist_struct" */
     struct Registo *test_registo = createRegisto();
     
     if (test_registo!=NULL) {
