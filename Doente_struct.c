@@ -19,6 +19,10 @@ void toFile_Doente(struct Doente *doente, FILE *fd) {
 
 #ifndef main
 int main() {
+    struct Doente *test_doente = createData();
+    if (test_doente!=NULL) {
+        printf("\"test_doente\" created successfully\n");
+    }
     return 0;
 }
 #endif
