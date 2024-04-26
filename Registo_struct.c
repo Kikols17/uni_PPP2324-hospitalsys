@@ -24,7 +24,7 @@ void toFile_Registo(struct Registo *registo, FILE *fd) {
 
 
 /*
-int main() {
+int main2() {
     / Test Case for "Regist_struct" /
     struct Registo *test_registo = createRegisto();
     

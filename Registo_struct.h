@@ -15,6 +15,13 @@ typedef struct Registo {
     int height;
 } Registo;
 
+typedef struct node{
+    Registo registo;
+    struct nodeR * next;
+
+}nodeR;
+
+typedef nodeR * listaR;
 
 Registo *createRegisto();
 void toFile_Registo(struct Registo *registo, FILE *fd);

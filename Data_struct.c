@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "Data_struct.h"
 
@@ -19,11 +20,26 @@ struct Data *createData(int year, int month, int day) {
     return new_Data;
 }
 
+Data str_toData(char str[]){
+    Data newData;
+    char * fields;
+    char bar[2] = "/";
+    
+    fields = strtok(str,bar);
+    newData.day = atoi(fields);
+    fields = strtok(str,bar);
+    newData.month = atoi(fields);
+    fields = strtok(str,bar);
+    newData.year = atoi(fields);
 
-void toString_Data(struct Data *date) {
-    /* Convert "Data" to char array */
-    sprintf(date->str, "%d/%d/%d", date->day, date->month, date->year);
+
+    return newData;
 }
+
+/*void toString_Data(struct Data *date) {
+    //Convert "Data" to char array 
+    sprintf(date->str, "%d/%d/%d", date->day, date->month, date->year);
+}*/
 
 
 int bigger_Data(struct Data *date1, struct Data *date2) {
@@ -43,7 +59,7 @@ int bigger_Data(struct Data *date1, struct Data *date2) {
 
 
 /*
-int main() {
+int main2() {
     / Test Case for "Data_struct" /
     struct Data *test_data = createData(2024, 12, 31);
     if (test_data!=NULL) {
