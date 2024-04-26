@@ -26,6 +26,9 @@ void toString_Data(struct Data *date) {
 
 #ifndef main
 int main() {
+    struct Data *test_data = createData(2024, 12, 31);
+    toString_Data(test_data);
+    fprintf(stdout, "TEST_DATA:\n\texpected:\t31/12/2024\n\tgot:\t%s\n", test_data->str);
     return 0;
 }
 #endif
