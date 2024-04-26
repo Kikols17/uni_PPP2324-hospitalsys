@@ -20,7 +20,7 @@ struct Data *createData(int year, int month, int day) {
     return new_Data;
 }
 
-Data str_toData(char str[]){
+Data str_toData(char *str){
     Data newData;
     char * fields;
     char bar[2] = "/";
@@ -36,9 +36,9 @@ Data str_toData(char str[]){
     return newData;
 }
 
-void toString_Data(struct Data *date) {
-    //Convert "Data" to char array 
-    //sprintf(date->str, "%d/%d/%d", date->day, date->month, date->year);
+void toString_Data(struct Data *date, char *buff) {
+    /* Convert "Data" to char array */
+    sprintf(buff, "%d/%d/%d", date->day, date->month, date->year);
 }
 
 
