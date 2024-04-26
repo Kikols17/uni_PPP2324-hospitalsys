@@ -2,6 +2,7 @@
 #define REGISTO_H
 
 #include <stdio.h>
+
 #include "Data_struct.h"
 
 
@@ -16,6 +17,7 @@ typedef struct Registo {
 
 
 Registo *createRegisto();
+void toFile_Registo(struct Registo *registo, FILE *fd);
 
 
 #endif
