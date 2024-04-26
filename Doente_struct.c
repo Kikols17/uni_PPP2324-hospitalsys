@@ -16,6 +16,7 @@ struct Doente *createDoente() {
     return malloc(sizeof(Doente));
 }
 
+/*
 listaD createListD(){
     listaD aux;
     Doente dnull = {0,"",{0,0,0},"",0,""};
@@ -28,7 +29,9 @@ listaD createListD(){
 
     return aux;
 }
+*/
 
+/*
 void insertD(listaD list, Doente d){
     listaD node = (listaD) malloc(sizeof(nodeD));
     listaD cur = list;
@@ -43,6 +46,7 @@ void insertD(listaD list, Doente d){
     cur->next = node;
     return;
 }
+*/
 
 void toFile_Doente(struct Doente *doente, FILE *fd) {
     char buff[DATA_STRING_SIZE];
@@ -50,7 +54,7 @@ void toFile_Doente(struct Doente *doente, FILE *fd) {
     fprintf(fd, "%d\n%s\n%s\n%s\n%d\n%s", doente->id, doente->name, buff, doente->cc, doente->tele, doente->email);
 }
 
-void print_Doente(struct Doente *doente){
+void print_Doente(struct Doente *doente) {
     printf("ID: %d\n", doente->id);
     printf("Name: %s\n", doente->name);
     printf("Birthday: %d/%d/%d\n", doente->birthday.day, doente->birthday.month, doente->birthday.year);
@@ -60,6 +64,7 @@ void print_Doente(struct Doente *doente){
     printf("Birthday: %d/%d/%d\n", doente->birthday.day, doente->birthday.month, doente->birthday.year);
 }
 
+/*
 int read_Doentes(){
     FILE * fp;
     if ((fp = fopen("doentes.txt","r")) == NULL){
@@ -93,7 +98,7 @@ int read_Doentes(){
     fclose(fp);
 
 }
-
+*/
 
 
 

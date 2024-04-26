@@ -25,7 +25,7 @@ int toData_str(char *str, struct Data *date) {
      * returns 0 if success, -1 if incorrect format
      */
     char *year, *month, *day;
-    char sep = '/';
+    char sep[2] = "/";
     
     day = strtok(str, sep);
     month = strtok(str, sep);

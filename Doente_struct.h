@@ -17,17 +17,19 @@ typedef struct Doente {
     char email[DOENTE_NOME_SIZE];
 } Doente;
 
+/*
 typedef struct nodeD{
     Doente doente;
     struct nodeD *next;
 }nodeD;
+*/
+//typedef nodeD * listaD;
 
-typedef nodeD * listaD;
-
-listaD createListD();
+//listaD createListD();
 struct Doente *createDoente();
 void toFile_Doente(struct Doente *doente, FILE *fd);
-void read_Doentes();
+void print_Doente(struct Doente *doente);
+//int read_Doentes();
 
 
 
