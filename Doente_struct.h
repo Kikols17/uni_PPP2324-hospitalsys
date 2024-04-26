@@ -5,12 +5,13 @@
 #include "Data_struct.h"
 
 #define DOENTE_NOME_SIZE 64
+#define CC_SIZE 15
 
 typedef struct Doente {
     int id;
     char name[DOENTE_NOME_SIZE];
     struct Data birthday;
-    int cc;
+    char cc[CC_SIZE];
     int tele;
     char email[DOENTE_NOME_SIZE];
 } Doente;
