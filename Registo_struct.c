@@ -19,6 +19,8 @@ int main() {
     
     if (test_registo!=NULL) {
         printf("\"test_registo\" created successfully\n");
+    } else {
+        printf("error creating \"test_registo\"\n");
     }
     return 0;
 }

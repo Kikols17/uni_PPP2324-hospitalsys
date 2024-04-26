@@ -24,6 +24,8 @@ int main() {
     struct Doente *test_doente = createDoente();
     if (test_doente!=NULL) {
         printf("\"test_doente\" created successfully\n");
+    } else {
+        printf("error creating \"test_doente\"\n");
     }
     return 0;
 }
