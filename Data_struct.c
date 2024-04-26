@@ -20,20 +20,26 @@ struct Data *createData(int year, int month, int day) {
     return new_Data;
 }
 
-Data str_toData(char *str){
-    Data newData;
-    char * fields;
-    char bar[2] = "/";
+int toData_str(char *str, struct Data *date) {
+    /* Writes char array "str" to struc Data "date"
+     * returns 0 if success, -1 if incorrect format
+     */
+    char *year, *month, *day;
+    char sep = '/';
     
-    fields = strtok(str,bar);
-    newData.day = atoi(fields);
-    fields = strtok(str,bar);
-    newData.month = atoi(fields);
-    fields = strtok(str,bar);
-    newData.year = atoi(fields);
+    day = strtok(str, sep);
+    month = strtok(str, sep);
+    year = strtok(str, sep);
 
+    if (day==NULL || month==NULL, year==NULL) {
+        return -1;
+    }
 
-    return newData;
+    date->day = atoi(day);
+    date->month = atoi(month);
+    date->year = atoi(year);
+
+    return 0;
 }
 
 void toString_Data(struct Data *date, char *buff) {

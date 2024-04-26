@@ -6,7 +6,7 @@
 #include <string.h>
 
 #include "Doente_struct.h"
-//#include "Data_struct.h"
+#include "Data_struct.h"
 
 #define BUFFERS_SIZE 50
 #define PARAMS_DOENTE 6
@@ -50,21 +50,21 @@ void toFile_Doente(struct Doente *doente, FILE *fd) {
     fprintf(fd, "%d\n%s\n%s\n%s\n%d\n%s", doente->id, doente->name, buff, doente->cc, doente->tele, doente->email);
 }
 
-void print_Doente(Doente d){
-    /*printf("ID: %d\n",d.id);
-    printf("Name: %s\n",d.name);
-    printf("Birthday: %d/%d/%d\n",d.birthday.day,d.birthday.month,d.birthday.year);
-    printf("CC: %s\n",d.cc);
-    printf("Telephone: %d\n",d.tele);
-    printf("Email: %s\n",d.email);*/
-    printf("Birthday: %d/%d/%d\n",d.birthday.day,d.birthday.month,d.birthday.year);
-
+void print_Doente(struct Doente *doente){
+    printf("ID: %d\n", doente->id);
+    printf("Name: %s\n", doente->name);
+    printf("Birthday: %d/%d/%d\n", doente->birthday.day, doente->birthday.month, doente->birthday.year);
+    printf("CC: %s\n", doente->cc);
+    printf("Telephone: %d\n", doente->tele);
+    printf("Email: %s\n", doente->email);
+    printf("Birthday: %d/%d/%d\n", doente->birthday.day, doente->birthday.month, doente->birthday.year);
 }
 
-void read_Doentes(){
+int read_Doentes(){
     FILE * fp;
     if ((fp = fopen("doentes.txt","r")) == NULL){
-        printf("Erro ao abrir o ficheiro");
+        ferror("[ERROR] Erro ao abrir o ficheiro");
+        return -1;
     }
 
     char buffer[PARAMS_DOENTE][BUFFERS_SIZE];
@@ -83,7 +83,7 @@ void read_Doentes(){
         strcpy(newD.cc,buffer[3]);
         newD.tele = atoi(buffer[4]);
         strcpy(newD.email,buffer[5]);
-        print_Doente(newD);
+        print_Doente(&newD);
 
         //insertD();
     }
