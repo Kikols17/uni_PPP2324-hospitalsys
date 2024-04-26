@@ -36,10 +36,10 @@ Data str_toData(char str[]){
     return newData;
 }
 
-/*void toString_Data(struct Data *date) {
+void toString_Data(struct Data *date) {
     //Convert "Data" to char array 
-    sprintf(date->str, "%d/%d/%d", date->day, date->month, date->year);
-}*/
+    //sprintf(date->str, "%d/%d/%d", date->day, date->month, date->year);
+}
 
 
 int bigger_Data(struct Data *date1, struct Data *date2) {
