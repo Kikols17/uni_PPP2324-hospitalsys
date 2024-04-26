@@ -12,6 +12,12 @@ Registo *createRegisto() {
     return malloc(sizeof(Registo));
 }
 
+
+
+
+
+
+
 #ifndef main
 int main() {
     /* Test Case for "Regist_struct" */
