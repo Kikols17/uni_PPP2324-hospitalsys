@@ -45,8 +45,9 @@ void insertD(listaD list, Doente d){
 }
 
 void toFile_Doente(struct Doente *doente, FILE *fd) {
-    //toString_Data(&doente->birthday);
-    //fprintf(fd, "%d\n%s\n%s\n%s\n%d\n%s", doente->id, doente->name, doente->birthday.str, doente->cc, doente->tele, doente->email);
+    char buff[DATA_STRING_SIZE];
+    toString_Data(&doente->birthday, buff);
+    fprintf(fd, "%d\n%s\n%s\n%s\n%d\n%s", doente->id, doente->name, buff, doente->cc, doente->tele, doente->email);
 }
 
 void print_Doente(Doente d){
