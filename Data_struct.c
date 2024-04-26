@@ -26,6 +26,17 @@ void toString_Data(struct Data *date) {
 }
 
 
+int bigger_Data(struct Data *date1, struct Data *date2) {
+    /* Compares date1 and date2, return 1 if date1 is after, return 0 if equal */
+    if (date1->year > date2->year) {
+        return 1;
+    } else if (date1->month > date2->month) {
+        return 1;
+    }
+    return date1->day > date2->day;
+}
+
+
 
 
 

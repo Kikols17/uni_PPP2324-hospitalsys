@@ -13,5 +13,6 @@ typedef struct Data {
 
 struct Data *createData(int year, int month, int day);
 void toString_Data(struct Data *date);
+int bigger_Data(struct Data *date1, struct Data *date2);
 
 #endif
