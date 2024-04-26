@@ -31,7 +31,7 @@ int toData_str(char *str, struct Data *date) {
     month = strtok(str, sep);
     year = strtok(str, sep);
 
-    if (day==NULL || month==NULL, year==NULL) {
+    if (day==NULL || month==NULL || year==NULL) {
         return -1;
     }
 
