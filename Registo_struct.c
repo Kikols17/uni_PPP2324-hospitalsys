@@ -14,6 +14,11 @@ Registo *createRegisto() {
 
 #ifndef main
 int main() {
+    struct Registo *test_registo = createRegisto();
+    
+    if (test_registo!=NULL) {
+        printf("\"test_registo\" created successfully\n");
+    }
     return 0;
 }
 #endif
