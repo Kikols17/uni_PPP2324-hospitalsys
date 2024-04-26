@@ -31,9 +31,9 @@ void toString_Data(struct Data *date) {
 
 
 
-#ifndef main
+/*
 int main() {
-    /* Test Case for "Data_struct" */
+    / Test Case for "Data_struct" /
     struct Data *test_data = createData(2024, 12, 31);
     if (test_data!=NULL) {
         printf("\"test_data\" created successfully\n");
@@ -45,7 +45,7 @@ int main() {
     fprintf(stdout, "TEST_DATA string:\n\texpected:\t31/12/2024\n\tgot:\t%s\n", test_data->str);
     return 0;
 }
-#endif
+*/
 
 
 #endif

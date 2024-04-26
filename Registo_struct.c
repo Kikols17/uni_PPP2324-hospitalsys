@@ -15,7 +15,7 @@ Registo *createRegisto() {
 
 void toFile_Registo(struct Registo *registo, FILE *fd) {
     toString_Data(&registo->date);
-    fprintf(fd, "%d\n%s\n%d\n%d\n%d\n%d", registo->id, registo->date.str, registo->tens_max, registo->tens_min, registo->weight, registo->height);
+    fprintf(fd, "%d\n%s\n%d\n%d\n%d\n%d\n", registo->id, registo->date.str, registo->tens_max, registo->tens_min, registo->weight, registo->height);
 }
 
 
@@ -23,20 +23,23 @@ void toFile_Registo(struct Registo *registo, FILE *fd) {
 
 
 
-
-#ifndef main
+/*
 int main() {
-    /* Test Case for "Regist_struct" */
+    / Test Case for "Regist_struct" /
     struct Registo *test_registo = createRegisto();
     
     if (test_registo!=NULL) {
         printf("\"test_registo\" created successfully\n");
     } else {
         printf("error creating \"test_registo\"\n");
+        return -1;
     }
+
+    printf("\nWriting to File:\n");
+    toFile_Registo(test_registo, stdout);
     return 0;
 }
-#endif
+*/
 
 
 
