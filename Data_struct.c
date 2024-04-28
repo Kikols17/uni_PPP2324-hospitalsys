@@ -20,35 +20,67 @@ struct Data *createData(int year, int month, int day) {
     return new_Data;
 }
 
-int toData_str(char *str, struct Data *date) {
+int validate_data(int day, int month, int year){
+    // Given the day, month and year checks if the format is valid
+    // Valid = 1  Unvalid = 0
+
+    if (month > 12 || month < 1 || day < 1 || year < 1){
+        return 0;
+    }
+
+    switch (month){
+        case (4):
+        case (6):
+        case (9):
+        case (11):
+            if (day > 30) return 0;
+            break;
+    
+        case (2):
+            if (year%4==0 && day > 29) return 0;
+            if (year%4!=0 && day > 28) return 0;
+            break;
+
+        default:
+            if (day > 31) return 0;
+            break;
+    }
+
+    return 1;
+}
+
+
+int str_toData(char *str, Data *date) {
     /* Writes char array "str" to struc Data "date"
-     * returns 0 if success, -1 if incorrect format
+     * returns 1 if success, 0 if incorrect format
      */
     char *year, *month, *day;
     char sep[2] = "/";
-    
-    day = strtok(str, sep);
-    month = strtok(str, sep);
-    year = strtok(str, sep);
 
-    if (day==NULL || month==NULL || year==NULL) {
-        return -1;
-    }
-    if ((atoi(month)>12 || atoi(month)<1)) {
-        
-    }
+    day = strtok(str, sep);
+    month = strtok(NULL, sep);
+    year = strtok(NULL, sep);
 
     date->day = atoi(day);
     date->month = atoi(month);
     date->year = atoi(year);
 
+    if (validate_data(date->day, date->month, date->year)) return 1;
+
     return 0;
 }
 
-void toString_Data(struct Data *date, char *buff) {
+void data_toStr(Data date, char *buff) {
     /* Convert "Data" to char array */
-    sprintf(buff, "%d/%d/%d", date->day, date->month, date->year);
+    sprintf(buff, "%d/%d/%d", date.day, date.month, date.year);
 }
+
+
+
+
+
+
+
 
 
 int Datacmp(struct Data *date1, struct Data *date2) {

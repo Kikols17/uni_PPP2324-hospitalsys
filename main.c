@@ -7,6 +7,14 @@
 
 #define MAIN
 int main() {
-    read_Doentes();
+    // criação da lista ligada dos doentes
+    listaD doentes = createListD();
+
+    read_Doentes(doentes);
+
+
+
+
+    destroyListD(doentes);
     return 0;
 }

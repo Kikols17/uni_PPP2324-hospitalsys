@@ -11,8 +11,8 @@ typedef struct Data {
 
 
 struct Data *createData(int year, int month, int day);
-void toString_Data(struct Data *date, char *buff);
-int toData_str(char *str, struct Data *date);
+void data_toStr(Data date, char *buff);
+int str_toData(char *str, Data *date);
 int Datacmp(struct Data *date1, struct Data *date2);
 
 #endif
