@@ -1,5 +1,6 @@
 all: main.o Doente_struct.o Registo_struct.o Data_struct.o
 	gcc -Wall -Wextra main.c Doente_struct.o Registo_struct.o Data_struct.o -o main
+	rm -f *o
 
 
 

@@ -28,8 +28,8 @@ typedef nodeD * listaD;
 listaD createListD();
 void destroyListD(listaD list);
 
-void toFile_Doente(Doente *doente, FILE *fd);
 void print_Doente(Doente doente);
+int write_Doentes(listaD list);
 int read_Doentes(listaD list);
 
 

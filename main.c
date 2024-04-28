@@ -12,9 +12,6 @@ int main() {
 
     read_Doentes(doentes);
 
-
-
-
     destroyListD(doentes);
     return 0;
 }
