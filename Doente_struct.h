@@ -27,6 +27,10 @@ typedef nodeD * listaD;
 // List Functions
 listaD createListD();
 void destroyListD(listaD list);
+int insertD(listaD list, Doente d);
+
+int searchDoente_byName(listaD list, char *name, Doente **newD);
+Doente* searchDoente_byID(listaD list, int id);
 
 void print_Doente(Doente doente);
 int write_Doentes(listaD list);

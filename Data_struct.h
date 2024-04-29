@@ -4,9 +4,9 @@
 #define DATA_STRING_SIZE 32
 
 typedef struct Data {
-    int year;
-    int month;
     int day;
+    int month;
+    int year;
 } Data;
 
 

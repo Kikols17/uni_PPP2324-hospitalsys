@@ -12,80 +12,18 @@
 #define PARAMS_DOENTE 6
 
 
-// LIST
 
-listaD createListD(){
-    listaD aux;
-    Doente dnull = {0,"",{0,0,0},"",0,""};
-    aux = (listaD) malloc(sizeof(nodeD));
+// FILES -----------------------------------------
 
-    if(aux != NULL){
-        aux->doente = dnull;
-        aux->next = NULL;
-    }
-
-    return aux;
-}
-
-int emptyListD(listaD list){
-    if (list->next == NULL) return 1;
-    return 0;
-}
-
-void destroyListD(listaD list){
-    listaD aux;
-    while(!emptyListD(list)){
-        aux = list;
-        list = list->next;
-        free(aux);
-    }
-    free(list);
-}
-
-void insertD(listaD list, Doente d){
-    listaD node = (listaD) malloc(sizeof(nodeD));
-    listaD cur = list;
-    if (node == NULL){
-        perror("Erro ao inserir Doente na lista\n");
-        return;
-    }
-    node->next = NULL;
-    node->doente = d;
-    
-    while(cur->next != NULL) cur = cur->next;
-    cur->next = node;
-    return;
-}
-
-void print_Doente(Doente doente) {
-    // Prints all data stored in struct Doente
-    printf("ID: %d\n", doente.id);
-    printf("Name: %s\n", doente.name);
-    printf("Birthday: %d/%d/%d\n", doente.birthday.day, doente.birthday.month, doente.birthday.year);
-    printf("CC: %s\n", doente.cc);
-    printf("Telephone: %d\n", doente.tele);
-    printf("Email: %s\n", doente.email);
-}
-
-void print_D(Doente doente) {
-    // Prints ID and Name - minimalist print 
-    printf("ID: %d ", doente.id);
-    printf("Name: %s\n", doente.name);
-}
-
-
-// FILES
-
+// Write a Doente in a file in the correct format
 void toFile_Doente(Doente doente, FILE *fd) {
     char buff[DATA_STRING_SIZE];
     data_toStr(doente.birthday, buff);
     fprintf(fd, "%d\n%s\n%s\n%s\n%d\n%s\n", doente.id, doente.name, buff, doente.cc, doente.tele, doente.email);
-
 }
 
-
+// Reads the list of Doentes - use at the start of the program only
 int read_Doentes(listaD list){
-    // Reads the list of Doentes - use at the start of the program only
     FILE * fp;
     if ((fp = fopen("doentes.txt","r")) == NULL){
         perror("[ERROR] Erro ao abrir o ficheiro\n");
@@ -119,8 +57,8 @@ int read_Doentes(listaD list){
 
 }
 
+// Writes the list of Doentes - use at the end and after every change to the list
 int write_Doentes(listaD list){
-    // Writes the list of Doentes - use at the end and after every change to the list
     FILE * fp;
     if ((fp = fopen("doentes.txt","w")) == NULL){
         perror("[ERROR] Erro ao abrir o ficheiro\n");
@@ -136,6 +74,157 @@ int write_Doentes(listaD list){
     fclose(fp);
     return 0;
 }
+
+
+
+// LIST -----------------------------------------
+
+// Initializes the list of Doentes
+listaD createListD(){
+    listaD aux;
+    Doente dnull = {0,"",{0,0,0},"",0,""};
+    aux = (listaD) malloc(sizeof(nodeD));
+
+    if(aux != NULL){
+        aux->doente = dnull;
+        aux->next = NULL;
+    }
+
+    return aux;
+}
+
+// Checks if list is empty
+int emptyListD(listaD list){
+    if (list->next == NULL) return 1;
+    return 0;
+}
+
+// Frees all pointers in the list
+void destroyListD(listaD list){
+    listaD aux;
+    while(!emptyListD(list)){
+        aux = list;
+        list = list->next;
+        free(aux);
+    }
+    free(list);
+}
+
+// Checks if Doente is on list by its CC
+int in_listDoente(listaD list, Doente d){
+    // in list = 1 | not in list = 0
+    listaD cur = list;
+    char *cc = d.cc;
+
+    while(cur->next != NULL) {
+        if (strcmp(cur->doente.cc, cc)==0){
+            return 1;
+        }
+        cur = cur->next;
+    }
+
+    return 0;
+}
+
+// Inserts Doente in the list in the correct position by ID - first open ID
+int insertD(listaD list, Doente d){
+    // error = 0 | success = 1 | already in = -1
+
+
+    if (in_listDoente(list, d)) return -1;
+
+
+    listaD node = (listaD) malloc(sizeof(nodeD));
+    listaD cur = list;
+    if (node == NULL){
+        perror("Erro ao inserir Doente na lista\n");
+        return 0;
+    }
+    
+    // goes through the list to find an open space and gives Doente that id
+    // or goes to the  end of the list and inserts Doente there
+    int check_id = 1;
+    while(cur->next != NULL) {
+        if (cur->next->doente.id != check_id){
+            check_id++;
+            break;
+        }
+        cur = cur->next;
+        check_id++;
+    }
+
+    // set new Doente id
+    d.id = check_id;
+
+    node->next = cur->next;
+    node->doente = d;
+    cur->next = node;
+
+    // Update the DataBase (txt)
+    write_Doentes(list);
+    return 1;
+}
+
+// REMOVE
+
+
+// LIST EXTRA -----------------------------------------
+
+// Prints all data stored in struct Doente
+void print_Doente(Doente doente) {
+    printf("ID: %d\n", doente.id);
+    printf("Name: %s\n", doente.name);
+    printf("Birthday: %d/%d/%d\n", doente.birthday.day, doente.birthday.month, doente.birthday.year);
+    printf("CC: %s\n", doente.cc);
+    printf("Telephone: %d\n", doente.tele);
+    printf("Email: %s\n", doente.email);
+}
+
+// Prints ID and Name - minimalist print 
+void print_D(Doente doente) {
+    printf("ID: %d ", doente.id);
+    printf("Name: %s\n", doente.name);
+}
+
+
+// SORT - Insertion Sort :)
+
+
+// Looks for a Doente by it's id
+Doente* searchDoente_byID(listaD list, int id){
+    
+    // found = pointer to Doente in the list
+    // not found =  NULL
+    listaD cur = list;    
+
+    while(cur->next != NULL){
+        cur = cur->next;
+        if (cur->doente.id==id) {
+            return &cur->doente;
+        }
+    }
+    
+    return NULL;
+}
+
+// Looks for a Doente by its name
+int searchDoente_byName(listaD list, char *name, Doente **newD){
+    // found =  pointer to Doente (returned in newD)
+    // not found = NULL (returned in newD)
+    listaD cur = list;
+    
+    while(cur->next != NULL){
+        cur = cur->next;
+        if (strcmp(cur->doente.name,name)==0) {
+            *newD = &cur->doente;
+            return 1;
+        }
+    }
+    // check this
+    *newD = NULL;
+    return 0;
+}
+
 
 
 #endif
