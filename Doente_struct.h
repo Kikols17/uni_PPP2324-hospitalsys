@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include "Data_struct.h"
 
+#define BUFFER_SIZE 50
+#define PARAMS_DOENTE 6
 #define CHARS_CC 15
 #define DOENTE_NOME_SIZE 64
 
@@ -28,11 +30,13 @@ typedef nodeD * listaD;
 listaD createListD();
 void destroyListD(listaD list);
 int insertD(listaD list, Doente d);
+int removeD(listaD list, int id);
 
 int searchDoente_byName(listaD list, char *name, Doente **newD);
 Doente* searchDoente_byID(listaD list, int id);
 
 void print_Doente(Doente doente);
+void print_Alpha(listaD list);
 int write_Doentes(listaD list);
 int read_Doentes(listaD list);
 

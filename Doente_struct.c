@@ -8,13 +8,14 @@
 #include "Doente_struct.h"
 #include "Data_struct.h"
 
-#define BUFFER_SIZE 50
-#define PARAMS_DOENTE 6
 
+void print_D(Doente doente);
+void print_Doente(Doente doente);
 
 
 // FILES -----------------------------------------
 
+// PODE SER DESNECESSÁRIA MAS VERIFICAR ISSO
 // Write a Doente in a file in the correct format
 void toFile_Doente(Doente doente, FILE *fd) {
     char buff[DATA_STRING_SIZE];
@@ -22,11 +23,12 @@ void toFile_Doente(Doente doente, FILE *fd) {
     fprintf(fd, "%d\n%s\n%s\n%s\n%d\n%s\n", doente.id, doente.name, buff, doente.cc, doente.tele, doente.email);
 }
 
+// PERFECT DONT TOUCH!!!
 // Reads the list of Doentes - use at the start of the program only
 int read_Doentes(listaD list){
     FILE * fp;
     if ((fp = fopen("doentes.txt","r")) == NULL){
-        perror("[ERROR] Erro ao abrir o ficheiro\n");
+        perror("Erro ao abrir o ficheiro\n");
         return -1;
     }
 
@@ -39,7 +41,6 @@ int read_Doentes(listaD list){
             fgets(buffer[i], BUFFER_SIZE, fp);
             buffer[i][strlen(buffer[i])-1] = '\0';
         }
-
         newD.id = atoi(buffer[0]);
         strcpy(newD.name,buffer[1]);
         str_toData(buffer[2],&birth);
@@ -54,14 +55,14 @@ int read_Doentes(listaD list){
 
     fclose(fp);
     return 0;
-
 }
 
+// PERFECT DONT TOUCH!!!
 // Writes the list of Doentes - use at the end and after every change to the list
 int write_Doentes(listaD list){
     FILE * fp;
     if ((fp = fopen("doentes.txt","w")) == NULL){
-        perror("[ERROR] Erro ao abrir o ficheiro\n");
+        perror("Erro ao abrir o ficheiro\n");
         return -1;
     }
 
@@ -113,10 +114,12 @@ void destroyListD(listaD list){
 // Checks if Doente is on list by its CC
 int in_listDoente(listaD list, Doente d){
     // in list = 1 | not in list = 0
-    listaD cur = list;
+    listaD cur = list->next;
     char *cc = d.cc;
 
-    while(cur->next != NULL) {
+    while(cur != NULL) {
+        //print_D(cur->doente);
+        //printf("%s\n",cur->doente.cc);
         if (strcmp(cur->doente.cc, cc)==0){
             return 1;
         }
@@ -129,10 +132,7 @@ int in_listDoente(listaD list, Doente d){
 // Inserts Doente in the list in the correct position by ID - first open ID
 int insertD(listaD list, Doente d){
     // error = 0 | success = 1 | already in = -1
-
-
     if (in_listDoente(list, d)) return -1;
-
 
     listaD node = (listaD) malloc(sizeof(nodeD));
     listaD cur = list;
@@ -165,7 +165,28 @@ int insertD(listaD list, Doente d){
     return 1;
 }
 
-// REMOVE
+// Removes Doente by ID
+int removeD(listaD list, int id){
+    // not found = 0 | removed = 1
+
+    listaD prev = list;
+    listaD cur = prev->next;
+    
+    // goes through the list to find Doente with correct id
+    while(cur != NULL) {
+        if (cur->doente.id == id){
+            prev->next = cur->next;
+            free(cur);
+            write_Doentes(list);
+            return 1;
+        }
+        prev = cur;
+        cur = cur->next;
+    }
+
+    return 0;
+
+}
 
 
 // LIST EXTRA -----------------------------------------
@@ -187,8 +208,45 @@ void print_D(Doente doente) {
 }
 
 
-// SORT - Insertion Sort :)
+// Print Doentes sorted by alphabetical order - Insertion Sort :)
+// Check this please - there might be better solutions with less memory needed
+void print_Alpha(listaD list){
+    // list_size should ignore the header in the list
+    listaD cur = list->next;
+    int list_size = 0;
 
+    while(cur != NULL){
+        list_size++;
+        cur = cur->next;
+    }
+
+    cur = list->next;
+    // list of pointers to Doente - storing the address uses less memory than the storing the struct
+    Doente *pointers[list_size]; 
+    for (int i = 0; i < list_size; i++){
+        //printf("%d",i);
+        //print_D(*pointers[i]);
+        pointers[i] = &(cur->doente);
+        cur = cur->next;
+    }
+
+    for (int i = 1; i < list_size; i++){
+        int j = i;
+        // até elemento direita maior esquerda
+        while (j > 0 && (strcmp(pointers[j]->name, pointers[j-1]->name) < 0)){
+            // Check this
+            Doente *aux = pointers[j];
+            pointers[j] = pointers[j-1];
+            pointers[j-1] = aux;
+            j--;
+        }
+    }    
+
+    for (int i = 0; i < list_size; i++){
+        print_D(*pointers[i]);
+    }
+
+}
 
 // Looks for a Doente by it's id
 Doente* searchDoente_byID(listaD list, int id){

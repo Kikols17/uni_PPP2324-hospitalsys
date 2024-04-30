@@ -15,6 +15,9 @@
 
     VERIFICAR:
         - Não sei quanto a retornarmo algumas coisas na variável passada no parâmetro, ela muitas vezes não tem uso suficiente para justificar isto
+
+    IDEIAS
+        - talvez implementar na main uma struct q contenha os ponteiros das listas e o número de dados de cada uma
 */
 
 
@@ -25,19 +28,21 @@ int main() {
     listaD doentes = createListD();
 
     read_Doentes(doentes);
-    Doente d = {0,"Ulisses Rodrigues",{20,2,2004},"30299990-7-ZX2",914123123,"ulisses@gmail.com"};
-    Doente *d1;
-    if ((d1 = searchDoente_byID(doentes,3)) != NULL){
+    Doente d = {0,"Ulisses Catla",{20,2,2004},"30200000-7-ZX2",914123123,"ulisses@gmail.com"};
+    //Doente *d1;
+    /*if ((d1 = searchDoente_byID(doentes,3)) != NULL){
         print_Doente(*d1);
-    }
+    }*/
     
 
     insertD(doentes,d);
 
-    if ((d1 = searchDoente_byID(doentes,3)) != NULL){
+    /*if ((d1 = searchDoente_byID(doentes,3)) != NULL){
         print_Doente(*d1);
-    }
+    }*/
     
+    print_Alpha(doentes);
+
     destroyListD(doentes);
     return 0;
 }
