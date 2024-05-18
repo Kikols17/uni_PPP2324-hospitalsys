@@ -15,7 +15,7 @@ Registo *createRegisto() {
 
 void toFile_Registo(struct Registo *registo, FILE *fd) {
     char strData[DATA_STRING_SIZE];
-    toString_Data(&registo->date, strData);
+    //toString_Data(&registo->date, strData);
     fprintf(fd, "%d\n%s\n%d\n%d\n%d\n%d\n", registo->id, strData, registo->tens_max, registo->tens_min, registo->weight, registo->height);
 }
 
