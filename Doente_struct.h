@@ -22,6 +22,7 @@ typedef struct Doente {
 typedef struct nodeD{
     Doente doente;
     struct nodeD *next;
+    struct nodeD *prev;
 }nodeD;
 
 typedef nodeD * listaD;
@@ -32,8 +33,8 @@ void destroyListD(listaD list);
 int insertD(listaD list, Doente d);
 int removeD(listaD list, int id);
 
-int searchDoente_byName(listaD list, char *name, Doente **newD);
-Doente* searchDoente_byID(listaD list, int id);
+nodeD* searchDoente_byName(listaD list, char *name);
+nodeD* searchDoente_byID(listaD list, int id);
 
 void print_Doente(Doente doente);
 void print_Alpha(listaD list);

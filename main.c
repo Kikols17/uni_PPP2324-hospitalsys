@@ -35,12 +35,12 @@ int main() {
     }*/
     
 
-    insertD(doentes,d);
+    //insertD(doentes,d);
 
     /*if ((d1 = searchDoente_byID(doentes,3)) != NULL){
         print_Doente(*d1);
     }*/
-    
+    removeD(doentes,3);
     print_Alpha(doentes);
 
     destroyListD(doentes);

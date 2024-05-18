@@ -89,17 +89,20 @@ listaD createListD(){
     if(aux != NULL){
         aux->doente = dnull;
         aux->next = NULL;
+        aux->prev = NULL;
     }
 
     return aux;
 }
 
+// PERFECT DONT TOUCH!!!
 // Checks if list is empty
 int emptyListD(listaD list){
     if (list->next == NULL) return 1;
     return 0;
 }
 
+// PERFECT DONT TOUCH!!!
 // Frees all pointers in the list
 void destroyListD(listaD list){
     listaD aux;
@@ -129,14 +132,47 @@ int in_listDoente(listaD list, Doente d){
     return 0;
 }
 
+// Looks for a Doente by it's id
+listaD searchDoente_byID(listaD list, int id){
+    
+    // found = pointer to Doente in the list
+    // not found =  NULL
+    listaD cur = list;    
+
+    while(cur->next != NULL){
+        cur = cur->next;
+        if (cur->doente.id==id) {
+            return cur;
+        }
+    }
+    
+    return NULL;
+}
+
+// Looks for a Doente by its name
+listaD searchDoente_byName(listaD list, char *name){
+    // found =  pointer to Doente (returned in newD)
+    // not found = NULL (returned in newD)
+    listaD cur = list;
+    
+    while(cur->next != NULL){
+        cur = cur->next;
+        if (strcmp(cur->doente.name,name)==0) {
+            return cur;
+        }
+    }
+
+    return NULL;
+}
+
 // Inserts Doente in the list in the correct position by ID - first open ID
 int insertD(listaD list, Doente d){
     // error = 0 | success = 1 | already in = -1
     if (in_listDoente(list, d)) return -1;
 
-    listaD node = (listaD) malloc(sizeof(nodeD));
+    listaD new_node = (listaD) malloc(sizeof(nodeD));
     listaD cur = list;
-    if (node == NULL){
+    if (new_node == NULL){
         perror("Erro ao inserir Doente na lista\n");
         return 0;
     }
@@ -156,9 +192,10 @@ int insertD(listaD list, Doente d){
     // set new Doente id
     d.id = check_id;
 
-    node->next = cur->next;
-    node->doente = d;
-    cur->next = node;
+    new_node->next = cur->next;
+    new_node->doente = d;
+    cur->next = new_node;
+    new_node->prev = cur;
 
     // Update the DataBase (txt)
     write_Doentes(list);
@@ -168,24 +205,32 @@ int insertD(listaD list, Doente d){
 // Removes Doente by ID
 int removeD(listaD list, int id){
     // not found = 0 | removed = 1
-
-    listaD prev = list;
-    listaD cur = prev->next;
     
-    // goes through the list to find Doente with correct id
-    while(cur != NULL) {
-        if (cur->doente.id == id){
-            prev->next = cur->next;
-            free(cur);
-            write_Doentes(list);
-            return 1;
-        }
-        prev = cur;
-        cur = cur->next;
+    listaD prior;
+    listaD following;
+    listaD d;
+    
+    d = searchDoente_byID(list, id);
+    printf("%d\n",id);
+    print_D(d->doente);
+
+    if (d != NULL){
+        prior = d->prev;
+        following = d->next;
+        
+        // make sure the pointers aren't NULL
+        if (prior != NULL) prior->next = following;
+        
+        if (following != NULL) following->prev = prior;
+        
+        free(d);
+        write_Doentes(list);
+        // remove Registo associated with Doente
+        return 1;
+
     }
 
     return 0;
-
 }
 
 
@@ -247,42 +292,5 @@ void print_Alpha(listaD list){
     }
 
 }
-
-// Looks for a Doente by it's id
-Doente* searchDoente_byID(listaD list, int id){
-    
-    // found = pointer to Doente in the list
-    // not found =  NULL
-    listaD cur = list;    
-
-    while(cur->next != NULL){
-        cur = cur->next;
-        if (cur->doente.id==id) {
-            return &cur->doente;
-        }
-    }
-    
-    return NULL;
-}
-
-// Looks for a Doente by its name
-int searchDoente_byName(listaD list, char *name, Doente **newD){
-    // found =  pointer to Doente (returned in newD)
-    // not found = NULL (returned in newD)
-    listaD cur = list;
-    
-    while(cur->next != NULL){
-        cur = cur->next;
-        if (strcmp(cur->doente.name,name)==0) {
-            *newD = &cur->doente;
-            return 1;
-        }
-    }
-    // check this
-    *newD = NULL;
-    return 0;
-}
-
-
 
 #endif
