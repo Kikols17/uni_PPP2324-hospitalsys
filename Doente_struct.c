@@ -212,9 +212,10 @@ int removeD(listaD list, int id){
     
     d = searchDoente_byID(list, id);
     printf("%d\n",id);
-    print_D(d->doente);
+    
 
     if (d != NULL){
+        //print_D(d->doente);
         prior = d->prev;
         following = d->next;
         
