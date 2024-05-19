@@ -11,8 +11,11 @@ typedef struct Data {
 
 
 struct Data *createData(int year, int month, int day);
-void data_toStr(Data date, char *buff);
+int validate_data(int day, int month, int year);
+
+void data_toStr(Data *date, char *buff);
 int str_toData(char *str, Data *date);
+
 int Datacmp(struct Data *date1, struct Data *date2);
 
 #endif

@@ -9,9 +9,6 @@
 #include "Data_struct.h"
 
 
-void print_D(Doente doente);
-void print_Doente(Doente doente);
-
 
 // FILES -----------------------------------------
 
@@ -19,7 +16,7 @@ void print_Doente(Doente doente);
 // Write a Doente in a file in the correct format
 void toFile_Doente(Doente doente, FILE *fd) {
     char buff[DATA_STRING_SIZE];
-    data_toStr(doente.birthday, buff);
+    data_toStr(&doente.birthday, buff);
     fprintf(fd, "%d\n%s\n%s\n%s\n%d\n%s\n", doente.id, doente.name, buff, doente.cc, doente.tele, doente.email);
 }
 
