@@ -32,6 +32,30 @@ struct Data *createData(int year, int month, int day) {
     return new_Data;
 }
 
+int set_Data(struct Data *date, int year, int month, int day) {
+    /* Introduces the info "year", "month" and "day" into the struct
+     *
+     * Returns:
+     *      -> -1 date pointer is NULL
+     *      -> 0 if success
+     *      -> 1 if invalid date
+     */
+    if (date == NULL) {
+        // invalid pointer
+        return -1;
+    }
+    if ( validate_data(day, month, year)!=0 ) {
+        // invalid date
+        return 1;
+    }
+
+    date->year = year;
+    date->month = month;
+    date->day = day;
+
+    return 0;
+}
+
 int validate_data(int day, int month, int year) {
     /* Given the day, month and year checks if the format is valid
      * Valid = 0  Unvalid = 1

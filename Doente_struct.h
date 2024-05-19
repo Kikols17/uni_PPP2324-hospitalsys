@@ -27,19 +27,25 @@ typedef struct nodeD{
 
 typedef nodeD * listaD;
 
-// List Functions
+void toFile_Doente(Doente doente, FILE *fd);
+int fromFile_Doente(listaD list);
+int write_Doentes(listaD list);
+
 listaD createListD();
+int emptyListD(listaD list);
 void destroyListD(listaD list);
+
+int in_listDoente(listaD list, Doente d);
+listaD searchDoente_byID(listaD list, int id);
+listaD searchDoente_byName(listaD list, char *name);
+
 int insertD(listaD list, Doente d);
 int removeD(listaD list, int id);
 
-nodeD* searchDoente_byName(listaD list, char *name);
-nodeD* searchDoente_byID(listaD list, int id);
-
 void print_Doente(Doente doente);
+void print_Doente2(Doente doente);
 void print_Alpha(listaD list);
-int write_Doentes(listaD list);
-int read_Doentes(listaD list);
+
 
 
 

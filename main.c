@@ -27,7 +27,7 @@ int main() {
     // criação da lista ligada dos doentes
     listaD doentes = createListD();
 
-    read_Doentes(doentes);
+    fromFile_Doente(doentes);
     Doente d = {0,"Ulisses Catla",{20,2,2004},"30200000-7-ZX2",914123123,"ulisses@gmail.com"};
     //Doente *d1;
     /*if ((d1 = searchDoente_byID(doentes,3)) != NULL){

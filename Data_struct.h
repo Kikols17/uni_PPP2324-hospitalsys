@@ -11,6 +11,7 @@ typedef struct Data {
 
 
 struct Data *createData(int year, int month, int day);
+int set_Data(struct Data *date, int year, int month, int day);
 int validate_data(int day, int month, int year);
 
 void data_toStr(Data *date, char *buff);

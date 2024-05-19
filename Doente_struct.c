@@ -22,7 +22,12 @@ void toFile_Doente(Doente doente, FILE *fd) {
 
 // PERFECT DONT TOUCH!!!
 // Reads the list of Doentes - use at the start of the program only
-int read_Doentes(listaD list){
+int fromFile_Doente(listaD list) {
+    /* Read the file and insert the Doentes in the list
+     * Returns:
+     *      -1 - error on file
+     *      0 - success
+     */
     FILE * fp;
     if ((fp = fopen("doentes.txt","r")) == NULL){
         perror("Erro ao abrir o ficheiro\n");
@@ -78,7 +83,7 @@ int write_Doentes(listaD list){
 // LIST -----------------------------------------
 
 // Initializes the list of Doentes
-listaD createListD(){
+listaD createListD() {
     listaD aux;
     Doente dnull = {0,"",{0,0,0},"",0,""};
     aux = (listaD) malloc(sizeof(nodeD));
@@ -94,14 +99,14 @@ listaD createListD(){
 
 // PERFECT DONT TOUCH!!!
 // Checks if list is empty
-int emptyListD(listaD list){
+int emptyListD(listaD list) {
     if (list->next == NULL) return 1;
     return 0;
 }
 
 // PERFECT DONT TOUCH!!!
 // Frees all pointers in the list
-void destroyListD(listaD list){
+void destroyListD(listaD list) {
     listaD aux;
     while(!emptyListD(list)){
         aux = list;
@@ -112,7 +117,7 @@ void destroyListD(listaD list){
 }
 
 // Checks if Doente is on list by its CC
-int in_listDoente(listaD list, Doente d){
+int in_listDoente(listaD list, Doente d) {
     // in list = 1 | not in list = 0
     listaD cur = list->next;
     char *cc = d.cc;
@@ -130,7 +135,7 @@ int in_listDoente(listaD list, Doente d){
 }
 
 // Looks for a Doente by it's id
-listaD searchDoente_byID(listaD list, int id){
+listaD searchDoente_byID(listaD list, int id) {
     
     // found = pointer to Doente in the list
     // not found =  NULL
@@ -147,7 +152,7 @@ listaD searchDoente_byID(listaD list, int id){
 }
 
 // Looks for a Doente by its name
-listaD searchDoente_byName(listaD list, char *name){
+listaD searchDoente_byName(listaD list, char *name) {
     // found =  pointer to Doente (returned in newD)
     // not found = NULL (returned in newD)
     listaD cur = list;
@@ -163,7 +168,7 @@ listaD searchDoente_byName(listaD list, char *name){
 }
 
 // Inserts Doente in the list in the correct position by ID - first open ID
-int insertD(listaD list, Doente d){
+int insertD(listaD list, Doente d) {
     // error = 0 | success = 1 | already in = -1
     if (in_listDoente(list, d)) return -1;
 
@@ -200,7 +205,7 @@ int insertD(listaD list, Doente d){
 }
 
 // Removes Doente by ID
-int removeD(listaD list, int id){
+int removeD(listaD list, int id) {
     // not found = 0 | removed = 1
     
     listaD prior;
@@ -245,7 +250,7 @@ void print_Doente(Doente doente) {
 }
 
 // Prints ID and Name - minimalist print 
-void print_D(Doente doente) {
+void print_Doente2(Doente doente) {
     printf("ID: %d ", doente.id);
     printf("Name: %s\n", doente.name);
 }
@@ -253,7 +258,7 @@ void print_D(Doente doente) {
 
 // Print Doentes sorted by alphabetical order - Insertion Sort :)
 // Check this please - there might be better solutions with less memory needed
-void print_Alpha(listaD list){
+void print_Alpha(listaD list) {
     // list_size should ignore the header in the list
     listaD cur = list->next;
     int list_size = 0;
@@ -286,7 +291,7 @@ void print_Alpha(listaD list){
     }    
 
     for (int i = 0; i < list_size; i++){
-        print_D(*pointers[i]);
+        print_Doente2(*pointers[i]);
     }
 
 }
