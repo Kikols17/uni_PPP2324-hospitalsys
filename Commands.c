@@ -65,19 +65,19 @@ int cmd_AddDoente(struct ListaDoente *listaD, int id, char *name, char *birthday
     ret = pushListDoente(listaD, node);
     if ( ret==-1 ) {
         sprintf(response+strlen(response), "->!ERROR!\n\t-> Error pushing node\n");
-        destroyNodeDoente(node);
+        destroyNodeDoente(listaD, node);
         return -1;
     } else if (ret==1) {
         sprintf(response+strlen(response), "->!ERROR!\n\t-> Doente's ID already in system\n");
-        destroyNodeDoente(node);
+        destroyNodeDoente(listaD, node);
         return 1;
     } else if (ret==2) {
         sprintf(response+strlen(response), "->!ERROR!\n\t-> Doente's name already in system\n");
-        destroyNodeDoente(node);
+        destroyNodeDoente(listaD, node);
         return 1;
     } else if (ret==3) {
         sprintf(response+strlen(response), "->!ERROR!\n\t-> Doente's cc already in system\n");
-        destroyNodeDoente(node);
+        destroyNodeDoente(listaD, node);
         return 1;
     }
     sprintf(response+strlen(response), "Doente \"%s\" with ID%d added to system\n", name, id);
@@ -97,7 +97,7 @@ int cmd_RmvDoente(struct ListaDoente *listaD, char *name, char *response) {
         sprintf(response+strlen(response), "->!ERROR!\n\t-> Doente not in system\n");
         return 1;
     }
-    if ( destroyNodeDoente(node)==-1 ) {
+    if ( destroyNodeDoente(listaD, node)==-1 ) {
         sprintf(response+strlen(response), "->!ERROR!\n\t-> Error destroying node\n");
         return -1;
     }

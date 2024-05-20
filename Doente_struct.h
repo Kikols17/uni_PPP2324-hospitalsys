@@ -42,7 +42,7 @@ int printDoente(Doente *doente);
 // NodeDoente ---------------------------------
 struct NodeDoente *createNodeDoente(Doente *doente);
 int setNodeDoente(struct NodeDoente *nodeD, Doente *doente);
-int destroyNodeDoente(struct NodeDoente *nodeD);
+int destroyNodeDoente(struct ListaDoente *listaD, struct NodeDoente *nodeD);
 int printNodeDoente(struct NodeDoente *nodeD);
 
 

@@ -172,7 +172,7 @@ int setNodeDoente(struct NodeDoente *nodeD, Doente *doente) {
     return 0;
 }
 
-int destroyNodeDoente(struct NodeDoente *nodeD) {
+int destroyNodeDoente(struct ListaDoente *listaD, struct NodeDoente *nodeD) {
     /* Frees the memory allocated for the NodeDoente struct, frees the Doente struct and joins next and prev nodes
      * Returns:
      *      -> -1 date pointer is NULL
@@ -188,13 +188,19 @@ int destroyNodeDoente(struct NodeDoente *nodeD) {
     auxPrev = nodeD->prev;
     auxNext = nodeD->next;
     if (auxPrev != NULL) {
+        // store prev node
         auxPrev->next = auxNext;
+    } else {
+        // node is first, update first
+        listaD->first = auxNext;
     }
     if (auxNext != NULL) {
+        // store next node
         auxNext->prev = auxPrev;
     }
 
-    free(nodeD->doente);
+    // free memory
+    destroyDoente(nodeD->doente);
     free(nodeD);
     return 0;
 }
@@ -269,7 +275,7 @@ int destroyListaDoente(struct ListaDoente *listD) {
     struct NodeDoente *aux;
     while (cur != NULL) {
         aux = cur->next;
-        destroyNodeDoente(cur);
+        destroyNodeDoente(listD, cur);
         cur = aux;
     }
 
