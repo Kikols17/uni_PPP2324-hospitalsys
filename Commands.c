@@ -84,7 +84,7 @@ int cmd_AddDoente(struct ListaDoente *listaD, int id, char *name, char *birthday
     return 0;
 }
 
-int cmd_RmvDoente(struct ListaDoente *listaD, char *name, char *response) {
+int cmd_RmvDoente(struct ListaDoente *listaD, struct ListaRegisto *listR, char *name, char *response) {
     /* Searches for doente by name in "lista" and removes it
      * 
      * Returns:
@@ -101,7 +101,22 @@ int cmd_RmvDoente(struct ListaDoente *listaD, char *name, char *response) {
         sprintf(response+strlen(response), "->!ERROR!\n\t-> Error destroying node\n");
         return -1;
     }
-    sprintf(response+strlen(response), "Doente \"%s\" removed from system\n", name);
+
+    // sort list by ID, so that all registo's from doente with ID "id" are together
+    sortListRegistoID(listR);
+    struct NodeRegisto *curR = findIDListRegisto(listR, node->doente->id);  // find first registo from doente with ID "id"
+    struct NodeRegisto *nextR;
+    while ( curR!=NULL && curR->registo->id==node->doente->id ) {
+        // remove all registo's from doente with ID "id"
+        nextR = curR->next;
+        if (destroyNodeRegisto(listR, curR)!=0) {
+            printf("Error destroying registo\n");
+        }
+        curR = nextR;
+    }
+
+
+    sprintf(response+strlen(response), "Doente \"%s\" removed from system\n(all \"registos\" for this user deleted as well)", name);
     return 0;
 }
 

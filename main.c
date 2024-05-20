@@ -117,7 +117,7 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
             sprintf(response, "Invalid format:\n\t-> rmv_doente <name>\n");
             return 2;
         }
-        if ( cmd_RmvDoente(ListD, arg1, response)!=0 ) {
+        if ( cmd_RmvDoente(ListD, ListR, arg1, response)!=0 ) {
             sprintf(response, "!!Error!! on rmv_doente command\n");
             return 3;
         }
