@@ -422,6 +422,7 @@ int sortListDoenteAlpha(struct ListaDoente *lista) {
      */
     if (lista == NULL) {
         // invalid pointer
+        printf("invalid pointer\n");
         return -1;
     }
 

@@ -69,11 +69,11 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
         // HELP
         end = strtok(NULL, " ");
         if ( end!=NULL ) {
-            sprintf(response, "Invalid format:\n\t-> help\n");
+            sprintf(response+strlen(response), "Invalid format:\n\t-> help\n");
             return 2;
         }
-        if ( cmd_help(response)!=0 ) {
-            sprintf(response, "!!Error!! on help command\n");
+        if ( cmd_help(response)<0 ) {
+            sprintf(response+strlen(response), "!!Error!! on help command\n");
             return 3;
         }
         return 0;
@@ -83,7 +83,7 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
         // EXIT
         end = strtok(NULL, " ");
         if ( end!=NULL ) {
-            sprintf(response, "Invalid format:\n\t-> exit\n");
+            sprintf(response+strlen(response), "Invalid format:\n\t-> exit\n");
             return 2;
         }
         return -1;
@@ -99,11 +99,11 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
         arg6 = strtok(NULL, " ");
         end = strtok(NULL, " ");
         if ( arg1==NULL || arg2==NULL || arg3==NULL || arg4==NULL || arg5==NULL || arg6==NULL || end!=NULL ) {
-            sprintf(response, "Invalid format:\n\t-> add_doente <id> <name> <birthday> <cc> <tele> <email>\n");
+            sprintf(response+strlen(response), "Invalid format:\n\t-> add_doente <id> <name> <birthday> <cc> <tele> <email>\n");
             return 2;
         }
-        if ( cmd_AddDoente(ListD, atoi(arg1), arg2, arg3, arg4, atoi(arg5), arg6, response)!=0 ) {
-            sprintf(response, "!!Error!! on add_doente command\n");
+        if ( cmd_AddDoente(ListD, atoi(arg1), arg2, arg3, arg4, atoi(arg5), arg6, response)<0 ) {
+            sprintf(response+strlen(response), "!!Error!! on add_doente command\n");
             return 3;
         }
         return 0;
@@ -114,11 +114,11 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
         arg1 = strtok(NULL, " ");
         end = strtok(NULL, " ");
         if ( arg1==NULL || end!=NULL ) {
-            sprintf(response, "Invalid format:\n\t-> rmv_doente <name>\n");
+            sprintf(response+strlen(response), "Invalid format:\n\t-> rmv_doente <name>\n");
             return 2;
         }
-        if ( cmd_RmvDoente(ListD, ListR, arg1, response)!=0 ) {
-            sprintf(response, "!!Error!! on rmv_doente command\n");
+        if ( cmd_RmvDoente(ListD, ListR, arg1, response)<0 ) {
+            sprintf(response+strlen(response), "!!Error!! on rmv_doente command\n");
             return 3;
         }
         return 0;
@@ -128,11 +128,11 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
         // LIST_ALPHA
         end = strtok(NULL, " ");
         if ( end!=NULL ) {
-            sprintf(response, "Invalid format:\n\t-> list_alpha\n");
+            sprintf(response+strlen(response), "Invalid format:\n\t-> list_alpha\n");
             return 2;
         }
-        if ( cmd_listAlpha(ListD, response)!=0 ) {
-            sprintf(response, "!!Error!! on list_alpha command\n");
+        if ( cmd_listAlpha(ListD, response)<0 ) {
+            sprintf(response+strlen(response), "!!Error!! on list_alpha command\n");
             return 3;
         }
         return 0;
@@ -144,11 +144,11 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
         arg2 = strtok(NULL, " ");
         end = strtok(NULL, " ");
         if ( arg1==NULL || arg2==NULL || end!=NULL ) {
-            sprintf(response, "Invalid format:\n\t-> list_tens <id> <min_tension>\n");
+            sprintf(response+strlen(response), "Invalid format:\n\t-> list_tens <id> <min_tension>\n");
             return 2;
         }
-        if ( cmd_listTens(ListD, ListR, atoi(arg1), atoi(arg2), response)!=0 ) {
-            sprintf(response, "!!Error!! on list_tens command\n");
+        if ( cmd_listTens(ListD, ListR, atoi(arg1), atoi(arg2), response)<0 ) {
+            sprintf(response+strlen(response), "!!Error!! on list_tens command\n");
             return 3;
         }
         return 0;
@@ -159,11 +159,11 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
         arg1 = strtok(NULL, " ");
         end = strtok(NULL, " ");
         if ( arg1==NULL || end!=NULL ) {
-            sprintf(response, "Invalid format:\n\t-> display_doente <name>\n");
+            sprintf(response+strlen(response), "Invalid format:\n\t-> display_doente <name>\n");
             return 2;
         }
-        if ( cmd_displayDoente(ListD, ListR, arg1, response)!=0 ) {
-            sprintf(response, "!!Error!! on display_doente command\n");
+        if ( cmd_displayDoente(ListD, ListR, arg1, response)<0 ) {
+            sprintf(response+strlen(response), "!!Error!! on display_doente command\n");
             return 3;
         }
         return 0;
@@ -179,11 +179,11 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
         arg6 = strtok(NULL, " ");
         end = strtok(NULL, " ");
         if ( arg1==NULL || arg2==NULL || arg3==NULL || arg4==NULL || arg5==NULL || arg6==NULL || end!=NULL ) {
-            sprintf(response, "Invalid format:\n\t-> add_registo <id> <date> <tens_max> <tens_min> <weight> <height>\n");
+            sprintf(response+strlen(response), "Invalid format:\n\t-> add_registo <id> <date> <tens_max> <tens_min> <weight> <height>\n");
             return 2;
         }
-        if ( cmd_AddRegisto(ListD, ListR, atoi(arg1), arg2, atoi(arg3), atoi(arg4), atoi(arg5), atoi(arg6), response)!=0 ) {
-            sprintf(response, "!!Error!! on add_registo command\n");
+        if ( cmd_AddRegisto(ListD, ListR, atoi(arg1), arg2, atoi(arg3), atoi(arg4), atoi(arg5), atoi(arg6), response)<0 ) {
+            sprintf(response+strlen(response), "!!Error!! on add_registo command\n");
             return 3;
         }
         return 0;

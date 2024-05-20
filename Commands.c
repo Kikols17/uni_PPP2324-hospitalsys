@@ -124,7 +124,7 @@ int cmd_listAlpha(struct ListaDoente *listaD, char *response) {
     /* Lists all doentes in "lista" in alphabetical order */
     struct NodeDoente *node = listaD->first;
     if ( node==NULL ) {
-        sprintf(response+strlen(response), "->!ERROR!\n\t-> No doentes in system\n");
+        sprintf(response+strlen(response), "-> No doentes in system\n");
         return 1;
     }
     if ( sortListDoenteAlpha(listaD)!=0 ) {
