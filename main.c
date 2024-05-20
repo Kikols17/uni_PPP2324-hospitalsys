@@ -30,16 +30,15 @@ int main() {
         printf("Request: ");
         fgets(request, MAX_REQUEST_SIZE, stdin);
         request[strlen(request)-1] = '\0'; // remove '\n'
-        if ( strcmp(request, "exit")==0 ) {
-            break;
-        }
 
         response[0] = '\0';
         if (request_handler(ListD, ListR, request, response)==-1) {
             break;
         }
-        printf("Response:\n%s\n", response);
+        printf("%s\n", response);
     }
+
+    printf("--EXITING--\n");
 
     return 0;
 }
@@ -78,6 +77,16 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
         }
         return 0;
     
+
+    } else if ( strcmp(command, "exit")==0 ) {
+        // EXIT
+        end = strtok(NULL, " ");
+        if ( end!=NULL ) {
+            sprintf(response, "Invalid format:\n\t-> exit\n");
+            return 2;
+        }
+        return -1;
+
 
     } else if ( strcmp(command, "add_doente")==0 ) {
         // ADD_DOENTE
@@ -183,3 +192,4 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
     sprintf(response, "Command not found!\n\t-> Try \"help\" for list of commands\n");
     return 1;
 }
+

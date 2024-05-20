@@ -17,6 +17,7 @@ int cmd_help(char *response) {
     /* Appends the help message to the response */
     sprintf(response+strlen(response), "Available commands:\n"
                                        "\thelp\n"
+                                       "\texit\n"
                                        "\tadd_doente <id> <name> <birthday> <cc> <tele> <email>\n"
                                        "\trmv_doente <name>\n"
                                        "\tlist_alpha\n"
@@ -111,6 +112,11 @@ int cmd_listAlpha(struct ListaDoente *listaD, char *response) {
         sprintf(response+strlen(response), "->!ERROR!\n\t-> No doentes in system\n");
         return 1;
     }
+    if ( sortListDoenteAlpha(listaD)!=0 ) {
+        sprintf(response+strlen(response), "->!ERROR!\n\t-> Error sorting list\n");
+        return -1;
+    }
+
     sprintf(response+strlen(response), "Doentes in system:\n");
     while ( node!=NULL ) {
         sprintf(response+strlen(response), "\tID%d - %s\n", node->doente->id, node->doente->name);
