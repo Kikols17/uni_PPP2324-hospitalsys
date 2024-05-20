@@ -26,8 +26,9 @@ int main() {
     char request[MAX_REQUEST_SIZE];
     char response[MAX_REQUEST_SIZE];
 
+    printf("Welcome to the Health System\n\t-> Try \"help\" for list of commands\n\n");
     while (1) {
-        printf("Request: ");
+        printf("> ");
         fgets(request, MAX_REQUEST_SIZE, stdin);
         request[strlen(request)-1] = '\0'; // remove '\n'
 
@@ -35,7 +36,7 @@ int main() {
         if (request_handler(ListD, ListR, request, response)==-1) {
             break;
         }
-        printf("%s\n", response);
+        printf("%s\n\n", response);
     }
 
     printf("--EXITING--\n");
