@@ -19,32 +19,52 @@ typedef struct Doente {
 } Doente;
 
 
-typedef struct nodeD{
-    Doente doente;
-    struct nodeD *next;
-    struct nodeD *prev;
-}nodeD;
+typedef struct NodeDoente{
+    Doente *doente;
+    struct NodeDoente *next;
+    struct NodeDoente *prev;
+}NodeDoente;
 
-typedef nodeD * listaD;
+typedef struct ListaDoente{
+    struct NodeDoente *first;
+} ListaDoente;
 
-void toFile_Doente(Doente doente, FILE *fd);
-int fromFile_Doente(listaD list);
-int write_Doentes(listaD list);
 
-listaD createListD();
-int emptyListD(listaD list);
-void destroyListD(listaD list);
+// Doente ---------------------------------
+Doente *createDoente(int id, char *name, struct Data *birthday, char *cc, int tele, char *email);
+Doente *createEmptyDoente();
+int setDoente(struct Doente *doente, int id, char *name, struct Data *birthday, char *cc, int tele, char *email);
+int copyDoente(struct Doente *dest, struct Doente *src);
+int destroyDoente(Doente *doente);
+int printDoente(Doente *doente);
 
-int in_listDoente(listaD list, Doente d);
-listaD searchDoente_byID(listaD list, int id);
-listaD searchDoente_byName(listaD list, char *name);
 
-int insertD(listaD list, Doente d);
-int removeD(listaD list, int id);
+// NodeDoente ---------------------------------
+struct NodeDoente *createNodeDoente(Doente *doente);
+int setNodeDoente(struct NodeDoente *nodeD, Doente *doente);
+int destroyNodeDoente(struct NodeDoente *nodeD);
+int printNodeDoente(struct NodeDoente *nodeD);
 
-void print_Doente(Doente doente);
-void print_Doente2(Doente doente);
-void print_Alpha(listaD list);
+
+// ListaDoente ---------------------------------
+struct ListaDoente *createListaDoente();
+int destroyListaDoente(struct ListaDoente *listD);
+int pushListDoente(ListaDoente *listD, struct NodeDoente *nodeD);
+struct NodeDoente *findNameListDoente(struct ListaDoente *listD, char *name);
+struct NodeDoente *findIDListDoente(struct ListaDoente *listD, int id);
+
+int sortListDoenteID(struct ListaDoente *lista);
+int sortListDoenteAlpha(struct ListaDoente *lista);
+int printListDoente(struct ListaDoente *listD);
+
+
+// File ---------------------------------
+int Doente_appendFile(FILE *file, Doente *doente);
+int Doente_readFile(FILE *file, Doente *doente);
+int ListaDoente_toFile(char *filepath, struct ListaDoente *listD);
+int ListaDoente_readFile(char *filepath, struct ListaDoente *listD);
+
+
 
 
 

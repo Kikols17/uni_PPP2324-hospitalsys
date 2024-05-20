@@ -32,7 +32,19 @@ struct Data *createData(int year, int month, int day) {
     return new_Data;
 }
 
-int set_Data(struct Data *date, int year, int month, int day) {
+struct Data *createEmptyData() {
+    /* Returns pointer to newly allocated Data struct
+     * Also introduces the info "year", "month" and "day" into the struct
+     *
+     * Returns:
+     *      -> NULL if malloc fails or if the date is invalid
+     *      -> valid pointer to Data struct if success
+     */
+    return createData(1, 1, 1);
+};
+
+
+int setData(struct Data *date, int year, int month, int day) {
     /* Introduces the info "year", "month" and "day" into the struct
      *
      * Returns:
@@ -55,6 +67,17 @@ int set_Data(struct Data *date, int year, int month, int day) {
 
     return 0;
 }
+
+int destroyData(struct Data *date) {
+    /* Frees the memory allocated for the Data struct */
+    if (date == NULL) {
+        // invalid pointer
+        return -1;
+    }
+    free(date);
+    return 0;
+}
+
 
 int validate_data(int day, int month, int year) {
     /* Given the day, month and year checks if the format is valid
@@ -99,14 +122,26 @@ int validate_data(int day, int month, int year) {
 
 int str_toData(char *str, Data *date) {
     /* Writes char array "str" to struc Data "date"
-     * returns 1 if success, 0 if incorrect format
+     * Returns:
+     *      -> -2 if invalid format
+     *      -> -1 if invalid pointers
+     *      ->  0 if success
+     *      ->  1 if invalid date
      */
     char *year, *month, *day;
     char sep[2] = "/";
 
+    if (date==NULL || str==NULL) {
+        return -1;
+    }
+
     day = strtok(str, sep);
     month = strtok(NULL, sep);
     year = strtok(NULL, sep);
+
+    if (day==NULL || month==NULL || year==NULL) {
+        return -2;
+    }
 
     date->day = atoi(day);
     date->month = atoi(month);
@@ -152,6 +187,20 @@ int Datacmp(struct Data *date1, struct Data *date2) {
     return 0;
 }
 
+int Datacpy(struct Data *dest, struct Data *src) {
+    /* Copies src to dest
+     * Returns:
+     *      ->  0 if success
+     *      -> -1 if invalid pointers
+     */
+    if (dest == NULL || src == NULL) {
+        return -1;
+    }
+    dest->day = src->day;
+    dest->month = src->month;
+    dest->year = src->year;
+    return 0;
+}
 
 
 

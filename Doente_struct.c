@@ -9,291 +9,600 @@
 #include "Data_struct.h"
 
 
+// Doente ---------------------------------
 
-// FILES -----------------------------------------
-
-// PODE SER DESNECESSÁRIA MAS VERIFICAR ISSO
-// Write a Doente in a file in the correct format
-void toFile_Doente(Doente doente, FILE *fd) {
-    char buff[DATA_STRING_SIZE];
-    data_toStr(&doente.birthday, buff);
-    fprintf(fd, "%d\n%s\n%s\n%s\n%d\n%s\n", doente.id, doente.name, buff, doente.cc, doente.tele, doente.email);
-}
-
-// PERFECT DONT TOUCH!!!
-// Reads the list of Doentes - use at the start of the program only
-int fromFile_Doente(listaD list) {
-    /* Read the file and insert the Doentes in the list
+Doente *createDoente(int id, char *name, struct Data *birthday, char *cc, int tele, char *email) {
+    /* Returns pointer to newly allocated Doente struct
+     * Also introduces the info "id", "name", "birthday", "cc", "tele" and "email" into the struct
+     *
      * Returns:
-     *      -1 - error on file
-     *      0 - success
+     *      -> NULL if malloc fails or if the date is invalid
+     *      -> valid pointer to Doente struct if success
      */
-    FILE * fp;
-    if ((fp = fopen("doentes.txt","r")) == NULL){
-        perror("Erro ao abrir o ficheiro\n");
+    Doente *new_Doente = malloc(sizeof(Doente));
+    if (new_Doente == NULL) {
+        // malloc failed, download more RAM at downloadmoreram.com
+        return NULL;
+    }
+
+    new_Doente->id = id;
+    strcpy(new_Doente->name, name);
+    if ( Datacpy(&new_Doente->birthday, birthday)!=0 ) {
+        // invalid date
+        free(new_Doente);
+        return NULL;
+    }
+    strcpy(new_Doente->cc, cc);
+    new_Doente->tele = tele;
+    strcpy(new_Doente->email, email);
+
+    return new_Doente;
+}
+
+Doente *createEmptyDoente() {
+    /* Returns pointer to newly allocated Doente struct
+     * Also introduces the info "id", "name", "birthday", "cc", "tele" and "email" into the struct
+     *
+     * Returns:
+     *      -> NULL if malloc fails or if the date is invalid
+     *      -> valid pointer to Doente struct if success
+     */
+    struct Doente *new_Doente;
+    struct Data *new_Data = createEmptyData();
+
+    new_Doente = createDoente(0, "", new_Data, "", 0, "");
+    destroyData(new_Data);
+
+    return new_Doente;
+}
+
+int setDoente(struct Doente *doente, int id, char *name, struct Data *birthday, char *cc, int tele, char *email) {
+    /* Sets the values "id", "name", "birthday", "cc", "tele" and "email" into the struct
+     *
+     * Returns:
+     *      -> -1 date pointer is NULL
+     *      -> 0 if success
+     */
+    if (doente == NULL) {
+        // invalid pointer
         return -1;
     }
 
-    char buffer[PARAMS_DOENTE][BUFFER_SIZE];
-    Doente newD;
-    Data birth;
-    
-    while(fgets(buffer[0], BUFFER_SIZE, fp)!=NULL){
-        for (int i = 1; i < PARAMS_DOENTE; i++){
-            fgets(buffer[i], BUFFER_SIZE, fp);
-            buffer[i][strlen(buffer[i])-1] = '\0';
-        }
-        newD.id = atoi(buffer[0]);
-        strcpy(newD.name,buffer[1]);
-        str_toData(buffer[2],&birth);
-        newD.birthday = birth;
-        strcpy(newD.cc,buffer[3]);
-        newD.tele = atoi(buffer[4]);
-        strcpy(newD.email,buffer[5]);
-        //print_Doente(newD);
+    doente->id = id;
+    strcpy(doente->name, name);
+    Datacpy(&doente->birthday, birthday);
+    strcpy(doente->cc, cc);
+    doente->tele = tele;
+    strcpy(doente->email, email);
 
-        insertD(list,newD);
-    }
-
-    fclose(fp);
     return 0;
 }
 
-// PERFECT DONT TOUCH!!!
-// Writes the list of Doentes - use at the end and after every change to the list
-int write_Doentes(listaD list){
-    FILE * fp;
-    if ((fp = fopen("doentes.txt","w")) == NULL){
-        perror("Erro ao abrir o ficheiro\n");
+int copyDoente(struct Doente *dest, struct Doente *src) {
+    /* Copies the values from "src" to "dest"
+     *
+     * Returns:
+     *      -> -1 if invalid pointer
+     *      ->  0 if success
+     */
+    if (dest == NULL || src == NULL) {
+        // invalid pointer
         return -1;
     }
 
-    listaD aux = list->next;
-    while(aux!=NULL){
-        toFile_Doente(aux->doente,fp);
-        aux = aux->next;
+    dest->id = src->id;
+    strcpy(dest->name, src->name);
+    Datacpy(&dest->birthday, &src->birthday);
+    strcpy(dest->cc, src->cc);
+    dest->tele = src->tele;
+    strcpy(dest->email, src->email);
+
+    return 0;
+
+}
+
+int destroyDoente(Doente *doente) {
+    /* Frees the memory allocated for the Doente struct */
+    if (doente == NULL) {
+        // invalid pointer
+        return -1;
     }
 
-    fclose(fp);
+    free(doente);
+    return 0;
+}
+
+int printDoente(Doente *doente) {
+    /* Prints the Doente struct
+     * Returns:
+     *      -> -1 if Doente pointer is NULL
+     *     ->  0 if success
+     */
+    if (doente == NULL) {
+        // invalid pointer
+        return -1;
+    }
+
+    char buff[DATA_STRING_SIZE];
+    data_toStr(&doente->birthday, buff);
+    printf("ID: %d\nName: %s\nBirthday: %s\nCC: %s\nTele: %d\nEmail: %s\n", doente->id, doente->name, buff, doente->cc, doente->tele, doente->email);
+
     return 0;
 }
 
 
 
-// LIST -----------------------------------------
+// NodeDoente ---------------------------------
 
-// Initializes the list of Doentes
-listaD createListD() {
-    listaD aux;
-    Doente dnull = {0,"",{0,0,0},"",0,""};
-    aux = (listaD) malloc(sizeof(nodeD));
-
-    if(aux != NULL){
-        aux->doente = dnull;
-        aux->next = NULL;
-        aux->prev = NULL;
+struct NodeDoente *createNodeDoente(Doente *doente) {
+    /* Returns pointer to newly allocated NodeDoente struct
+     * Also introduces the info "doente" into the struct
+     *
+     * Returns:
+     *      -> NULL if malloc fails
+     *      -> valid pointer to NodeDoente struct if success
+     */
+    NodeDoente *new_NodeDoente = malloc(sizeof(NodeDoente));
+    if (new_NodeDoente == NULL) {
+        // malloc failed, download more RAM at downloadmoreram.com
+        return NULL;
     }
 
-    return aux;
+    new_NodeDoente->doente = doente;
+    new_NodeDoente->next = NULL;
+    new_NodeDoente->prev = NULL;
+
+    return new_NodeDoente;
 }
 
-// PERFECT DONT TOUCH!!!
-// Checks if list is empty
-int emptyListD(listaD list) {
-    if (list->next == NULL) return 1;
+int setNodeDoente(struct NodeDoente *nodeD, Doente *doente) {
+    /* Sets the value "doente" into the struct, and frees the previous one
+     *
+     * Returns:
+     *      -> -1 date pointer is NULL
+     *      -> 0 if success
+     */
+    if (nodeD == NULL) {
+        // invalid pointer
+        return -1;
+    }
+
+    destroyDoente(nodeD->doente);
+    nodeD->doente = doente;
     return 0;
 }
 
-// PERFECT DONT TOUCH!!!
-// Frees all pointers in the list
-void destroyListD(listaD list) {
-    listaD aux;
-    while(!emptyListD(list)){
-        aux = list;
-        list = list->next;
-        free(aux);
+int destroyNodeDoente(struct NodeDoente *nodeD) {
+    /* Frees the memory allocated for the NodeDoente struct, frees the Doente struct and joins next and prev nodes
+     * Returns:
+     *      -> -1 date pointer is NULL
+     *      -> 0 if success
+     */
+    if (nodeD == NULL) {
+        // invalid pointer
+        return -1;
     }
-    free(list);
+
+    // join prev and next nodes
+    struct NodeDoente *auxPrev, *auxNext;
+    auxPrev = nodeD->prev;
+    auxNext = nodeD->next;
+    if (auxPrev != NULL) {
+        auxPrev->next = auxNext;
+    }
+    if (auxNext != NULL) {
+        auxNext->prev = auxPrev;
+    }
+
+    free(nodeD->doente);
+    free(nodeD);
+    return 0;
 }
 
-// Checks if Doente is on list by its CC
-int in_listDoente(listaD list, Doente d) {
-    // in list = 1 | not in list = 0
-    listaD cur = list->next;
-    char *cc = d.cc;
-
-    while(cur != NULL) {
-        //print_D(cur->doente);
-        //printf("%s\n",cur->doente.cc);
-        if (strcmp(cur->doente.cc, cc)==0){
-            return 1;
-        }
-        cur = cur->next;
+int swapNodeDoente(struct NodeDoente *nodeD1, struct NodeDoente *nodeD2) {
+    /* Swaps the values of two NodeDoente structs
+     *
+     * Returns:
+     *      -> -1 if invalid pointer
+     *      ->  0 if success
+     */
+    if (nodeD1 == NULL || nodeD2 == NULL) {
+        // invalid pointer
+        return -1;
     }
+
+    struct Doente *temp = nodeD1->doente;
+    nodeD1->doente = nodeD2->doente;
+    nodeD2->doente = temp;
 
     return 0;
 }
 
-// Looks for a Doente by it's id
-listaD searchDoente_byID(listaD list, int id) {
-    
-    // found = pointer to Doente in the list
-    // not found =  NULL
-    listaD cur = list;    
-
-    while(cur->next != NULL){
-        cur = cur->next;
-        if (cur->doente.id==id) {
-            return cur;
-        }
-    }
-    
-    return NULL;
-}
-
-// Looks for a Doente by its name
-listaD searchDoente_byName(listaD list, char *name) {
-    // found =  pointer to Doente (returned in newD)
-    // not found = NULL (returned in newD)
-    listaD cur = list;
-    
-    while(cur->next != NULL){
-        cur = cur->next;
-        if (strcmp(cur->doente.name,name)==0) {
-            return cur;
-        }
+int printNodeDoente(struct NodeDoente *nodeD) {
+    /* Prints the NodeDoente struct
+     * Returns:
+     *      -> -1 if NodeDoente pointer is NULL
+     *     ->  0 if success
+     */
+    if (nodeD == NULL) {
+        // invalid pointer
+        return -1;
     }
 
-    return NULL;
+    printDoente(nodeD->doente);
+    printf("self->%p\nprev->%p\nnext->%p\n", nodeD, nodeD->prev, nodeD->next);
+    return 0;
 }
 
-// Inserts Doente in the list in the correct position by ID - first open ID
-int insertD(listaD list, Doente d) {
-    // error = 0 | success = 1 | already in = -1
-    if (in_listDoente(list, d)) return -1;
 
-    listaD new_node = (listaD) malloc(sizeof(nodeD));
-    listaD cur = list;
-    if (new_node == NULL){
-        perror("Erro ao inserir Doente na lista\n");
+
+// ListaDoente ---------------------------------
+
+struct ListaDoente *createListaDoente() {
+    /* Returns pointer to newly allocated NodeDoente struct
+     *
+     * Returns:
+     *      -> NULL if malloc fails
+     *      -> valid pointer to NodeDoente struct if success
+     */
+    struct ListaDoente *new_ListaDoente = malloc(sizeof(ListaDoente));
+    if (new_ListaDoente == NULL) {
+        // malloc failed, download more RAM at downloadmoreram.com
+        return NULL;
+    }
+    new_ListaDoente->first = NULL;
+    return new_ListaDoente;
+}
+
+int destroyListaDoente(struct ListaDoente *listD) {
+    /* Frees the memory allocated for the ListaDoente struct, frees the Doente structs and joins next and prev nodes
+     * Returns:
+     *      -> -1 date pointer is NULL
+     *      -> 0 if success
+     */
+    if (listD == NULL) {
+        // invalid pointer
+        return -1;
+    }
+
+    struct NodeDoente *cur = listD->first;
+    struct NodeDoente *aux;
+    while (cur != NULL) {
+        aux = cur->next;
+        destroyNodeDoente(cur);
+        cur = aux;
+    }
+
+    free(listD);
+    return 0;
+}
+
+int pushListDoente(struct ListaDoente *listD, struct NodeDoente *nodeD) {
+    /* Adds a new NodeDoente to the list, and checks if ID, name and CC are unique
+     *
+     * Returns:
+     *      -> -1 if list pointer is NULL
+     *      ->  0 if success
+     *      ->  1 id already exists
+     *      ->  2 name already exists
+     *      ->  3 CC already exists
+     */
+    if (listD == NULL) {
+        // invalid pointer
+        return -1;
+    }
+    if (listD->first == NULL) {
+        listD->first = nodeD;
         return 0;
     }
-    
-    // goes through the list to find an open space and gives Doente that id
-    // or goes to the  end of the list and inserts Doente there
-    int check_id = 1;
-    while(cur->next != NULL) {
-        if (cur->next->doente.id != check_id){
-            check_id++;
-            break;
+
+    struct NodeDoente *cur = listD->first;
+    while ( cur->next!=NULL ) {
+        if (cur->doente->id == nodeD->doente->id) {
+            // can't have two doentes with the same ID
+            return 1;
+        } else if ( strcmp(cur->doente->name, nodeD->doente->name)==0 ) {
+            // can't have two doentes with the same name
+            return 2;
+        } else if ( strcmp(cur->doente->cc, nodeD->doente->cc)==0 ) {
+            // can't have two doentes with the same CC
+            return 3;
         }
-        cur = cur->next;
-        check_id++;
+        cur = cur->next;        // insert at the end
     }
 
-    // set new Doente id
-    d.id = check_id;
+    // check again for last node
+    if (cur->doente->id == nodeD->doente->id) {
+        // can't have two doentes with the same ID
+        return 1;
+    } else if ( strcmp(cur->doente->name, nodeD->doente->name)==0 ) {
+        // can't have two doentes with the same name
+        return 2;
+    } else if ( strcmp(cur->doente->cc, nodeD->doente->cc)==0 ) {
+        // can't have two doentes with the same CC
+        return 3;
+    }
+    cur->next = nodeD;
+    nodeD->prev = cur;
 
-    new_node->next = cur->next;
-    new_node->doente = d;
-    cur->next = new_node;
-    new_node->prev = cur;
+    return 0;
 
-    // Update the DataBase (txt)
-    write_Doentes(list);
-    return 1;
 }
 
-// Removes Doente by ID
-int removeD(listaD list, int id) {
-    // not found = 0 | removed = 1
-    
-    listaD prior;
-    listaD following;
-    listaD d;
-    
-    d = searchDoente_byID(list, id);
-    printf("%d\n",id);
-    
+struct NodeDoente *findNameListDoente(struct ListaDoente *listD, char *name) {
+    /* Finds a Doente struct by name in the ListDoente
+     *
+     * Returns:
+     *      -> NULL if pointer / name is invalid / Doente not found
+     *      -> valid pointer to NodeDoente struct if success
+     */
+    if (listD == NULL) {
+        // invalid pointer
+        return NULL;
+    }
 
-    if (d != NULL){
-        //print_D(d->doente);
-        prior = d->prev;
-        following = d->next;
-        
-        // make sure the pointers aren't NULL
-        if (prior != NULL) prior->next = following;
-        
-        if (following != NULL) following->prev = prior;
-        
-        free(d);
-        write_Doentes(list);
-        // remove Registo associated with Doente
-        return 1;
+    if (name == NULL) {
+        // invalid name
+        return NULL;
+    }
 
+    struct NodeDoente *cur = listD->first;
+    while (cur != NULL) {
+        if ( strcmp(cur->doente->name, name)==0 ) {
+            return cur;
+        }
+        //printf("no: \"%s\"\n", cur->doente->name);
+        cur = cur->next;
+    }
+
+    return NULL;
+}
+
+struct NodeDoente *findIDListDoente(struct ListaDoente *listD, int id) {
+    /* Finds a Doente struct by ID in the ListDoente
+     *
+     * Returns:
+     *      -> NULL if pointer is invalid / Doente not found
+     *      -> valid pointer to NodeDoente struct if success
+     */
+    if (listD == NULL) {
+        // invalid pointer
+        return NULL;
+    }
+
+    struct NodeDoente *cur = listD->first;
+    while (cur != NULL) {
+        if (cur->doente->id == id) {
+            return cur;
+        }
+        cur = cur->next;
+    }
+
+    return NULL;
+}
+
+int sortListDoenteID(struct ListaDoente *lista) {
+    /* Sorts a "ListaRegisto" struct by ID with simple Bubble Sort
+     * Returns:
+     *      -> -1 if invalid pointer
+     *      -> 0 if success
+     */
+    if (lista == NULL) {
+        // invalid pointer
+        return -1;
+    }
+
+    struct NodeDoente *cur = lista->first;
+    struct NodeDoente *next = NULL;
+    while (cur != NULL) {
+        next = cur->next;
+        while (next != NULL) {
+            if (cur->doente->id > next->doente->id) {
+                // swap
+                swapNodeDoente(cur, next);
+            }
+            next = next->next;
+        }
+        cur = cur->next;
+    }
+    return 0;
+}
+
+int sortListDoenteAlpha(struct ListaDoente *lista) {
+    /* Sorts a "ListaRegisto" struct by Name in alphabetical order with simple Bubble Sort
+     * Returns:
+     *      -> -1 if invalid pointer
+     *      -> 0 if success
+     */
+    if (lista == NULL) {
+        // invalid pointer
+        return -1;
+    }
+
+    struct NodeDoente *cur = lista->first;
+    struct NodeDoente *next = NULL;
+    while (cur != NULL) {
+        next = cur->next;
+        while (next != NULL) {
+            if (strcmp(cur->doente->name, next->doente->name) > 0) {
+                // swap
+                swapNodeDoente(cur, next);
+            }
+            next = next->next;
+        }
+        cur = cur->next;
+    }
+    return 0;
+}
+
+int printListDoente(struct ListaDoente *listD) {
+    /* Prints the ListDoente struct
+     * Returns:
+     *      -> -1 if ListDoente pointer is NULL
+     *     ->  0 if success
+     */
+    if (listD == NULL) {
+        // invalid pointer
+        return -1;
+    }
+
+    struct NodeDoente *cur = listD->first;
+    while (cur != NULL) {
+        printf("\n");
+        printNodeDoente(cur);
+        cur = cur->next;
     }
 
     return 0;
 }
 
 
-// LIST EXTRA -----------------------------------------
 
-// Prints all data stored in struct Doente
-void print_Doente(Doente doente) {
-    printf("ID: %d\n", doente.id);
-    printf("Name: %s\n", doente.name);
-    printf("Birthday: %d/%d/%d\n", doente.birthday.day, doente.birthday.month, doente.birthday.year);
-    printf("CC: %s\n", doente.cc);
-    printf("Telephone: %d\n", doente.tele);
-    printf("Email: %s\n", doente.email);
-}
+// File ---------------------------------
 
-// Prints ID and Name - minimalist print 
-void print_Doente2(Doente doente) {
-    printf("ID: %d ", doente.id);
-    printf("Name: %s\n", doente.name);
-}
-
-
-// Print Doentes sorted by alphabetical order - Insertion Sort :)
-// Check this please - there might be better solutions with less memory needed
-void print_Alpha(listaD list) {
-    // list_size should ignore the header in the list
-    listaD cur = list->next;
-    int list_size = 0;
-
-    while(cur != NULL){
-        list_size++;
-        cur = cur->next;
+int Doente_appendFile(FILE *file, Doente *doente) {
+    /* Appends the Doente struct to a file
+     *
+     * Returns:
+     *      ->  0 if success
+     *      -> -1 if file pointer is NULL
+     *      -> -2 if Doente pointer is NULL
+     */
+    if (doente == NULL) {
+        // invalid pointer
+        return -2;
     }
 
-    cur = list->next;
-    // list of pointers to Doente - storing the address uses less memory than the storing the struct
-    Doente *pointers[list_size]; 
-    for (int i = 0; i < list_size; i++){
-        //printf("%d",i);
-        //print_D(*pointers[i]);
-        pointers[i] = &(cur->doente);
-        cur = cur->next;
+    char buff[DATA_STRING_SIZE];
+    data_toStr(&doente->birthday, buff);
+    fprintf(file, "%d\n%s\n%s\n%s\n%d\n%s\n", doente->id, doente->name, buff, doente->cc, doente->tele, doente->email);
+
+    return 0;
+}
+
+int Doente_readFile(FILE *file, Doente *doente) {
+    /* Reads the Doente struct from a file
+     *
+     * Returns:
+     *      ->  1 file at EOF
+     *      ->  0 if success
+     *      -> -1 if error read
+     *      -> -2 if Doente pointer is NULL
+     */
+    if (doente == NULL) {
+        // invalid pointer
+        return -2;
     }
 
-    for (int i = 1; i < list_size; i++){
-        int j = i;
-        // até elemento direita maior esquerda
-        while (j > 0 && (strcmp(pointers[j]->name, pointers[j-1]->name) < 0)){
-            // Check this
-            Doente *aux = pointers[j];
-            pointers[j] = pointers[j-1];
-            pointers[j-1] = aux;
-            j--;
+    // read from file
+    char buff[PARAMS_DOENTE][DATA_STRING_SIZE];
+    for (int i=0; i<PARAMS_DOENTE; i++) {
+        if (fgets(buff[i], DATA_STRING_SIZE, file) == NULL) {
+            // error reading file
+            if (i==0) {
+                // file at EOF
+                return 1;
+            } else {
+                // error reading file
+                return -1;
+            }
         }
-    }    
-
-    for (int i = 0; i < list_size; i++){
-        print_Doente2(*pointers[i]);
+        buff[i][strlen(buff[i])-1] = '\0';      // remove '\n'
     }
 
+    // set values
+    doente->id = atoi(buff[0]);
+    strcpy(doente->name, buff[1]);
+    if (str_toData(buff[2], &doente->birthday)!=0) {
+        // invalid date
+        return -1;
+    }
+    strcpy(doente->cc, buff[3]);
+    doente->tele = atoi(buff[4]);
+    strcpy(doente->email, buff[5]);
+
+
+    return 0;
 }
+
+int ListaDoente_toFile(char *filepath, struct ListaDoente *listD) {
+    /* Writes the ListDoente to a file
+     *
+     * Returns:
+     *      ->  0 if success
+     *      -> -1 if file pointer is NULL
+     *      -> -2 if ListDoente pointer is NULL
+     */
+    if (listD == NULL) {
+        // invalid pointer
+        return -2;
+    }
+
+    FILE *file = fopen(filepath, "w");
+    if (file == NULL) {
+        // invalid file
+        return -1;
+    }
+
+    NodeDoente *cur = listD->first;
+    while (cur != NULL) {
+        if ( Doente_appendFile(file, cur->doente)!=0 ) {
+            // error writing to file
+            fclose(file);
+            return -2;
+        }
+        cur = cur->next;
+    }
+
+    fclose(file);
+
+    return 0;
+}
+
+int ListaDoente_readFile(char *filepath, struct ListaDoente *listD) {
+    /* Reads the ListDoente from a file
+     *
+     * Returns:
+     *      ->  1 if list is not empty
+     *      ->  0 if success
+     *      -> -1 if file pointer is NULL
+     *      -> -2 if ListDoente pointer is NULL
+     */
+    if (listD == NULL) {
+        // invalid pointer
+        return 1;
+    }
+
+    FILE *file = fopen(filepath, "r");
+    if (file == NULL) {
+        // invalid file
+        return -1;
+    }
+
+    struct Doente *new_Doente = createEmptyDoente();        // create new doente
+    struct NodeDoente *new_NodeDoente;
+    while ( Doente_readFile(file, new_Doente)==0 ) {
+        new_NodeDoente = createNodeDoente(new_Doente);      // } create node
+        if (new_NodeDoente == NULL) {
+            // malloc failed
+            fclose(file);
+            return -2;
+        }
+        pushListDoente(listD, new_NodeDoente);              // push node to list
+
+        new_Doente = createEmptyDoente();                   // create new doente
+        if (new_Doente == NULL) {
+            // malloc failed
+            fclose(file);
+            return -2;
+        }
+    }
+
+
+    fclose(file);
+    return 0;
+}
+
+
 
 #endif

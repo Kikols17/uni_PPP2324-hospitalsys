@@ -1,48 +1,185 @@
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
+#include "Commands.h"
 #include "Doente_struct.h"
-//#include "Registo_struct.h"
+#include "Registo_struct.h"
 #include "Data_struct.h"
 
+#define MAX_REQUEST_SIZE 1024
 
-/*
-    DÚVIDAS RELATIVAS AO PROGRAMA:
-        - ID gerado ou atribuído na criação? - de momento atribuído
-        - implementar extras?
-        - eliminação por ID e nome ou só id? - de momento só ID
-        - necessário guardar de imediato as alterações no txt ou só são guardados no fim da execução - de momento de imediato para não existir perda de dados
 
-    VERIFICAR:
-        - Não sei quanto a retornarmo algumas coisas na variável passada no parâmetro, ela muitas vezes não tem uso suficiente para justificar isto
-
-    IDEIAS
-        - talvez implementar na main uma struct q contenha os ponteiros das listas e o número de dados de cada uma
-*/
+int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char *request, char *response);
 
 
 
-#define MAIN
 int main() {
-    // criação da lista ligada dos doentes
-    listaD doentes = createListD();
 
-    fromFile_Doente(doentes);
-    Doente d = {0,"Ulisses Catla",{20,2,2004},"30200000-7-ZX2",914123123,"ulisses@gmail.com"};
-    //Doente *d1;
-    /*if ((d1 = searchDoente_byID(doentes,3)) != NULL){
-        print_Doente(*d1);
-    }*/
+    struct ListaDoente *ListD = createListaDoente();
+    struct ListaRegisto *ListR = createListaRegisto();
+    if ( ListD==NULL || ListR==NULL ) {
+        printf("Error creating lists\n");
+        return -1;
+    }
+
+    char request[MAX_REQUEST_SIZE];
+    char response[MAX_REQUEST_SIZE];
+
+    while (1) {
+        printf("Request: ");
+        fgets(request, MAX_REQUEST_SIZE, stdin);
+        request[strlen(request)-1] = '\0'; // remove '\n'
+        if ( strcmp(request, "exit")==0 ) {
+            break;
+        }
+
+        response[0] = '\0';
+        if (request_handler(ListD, ListR, request, response)==-1) {
+            break;
+        }
+        printf("Response:\n%s\n", response);
+    }
+
+    return 0;
+}
+
+
+
+
+
+int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char *request, char *response) {
+    /* Handles the request and returns the response
+     * Returns:
+     *      -> -1 end of program
+     *      -> 0 if success
+     *      -> 1 command not found
+     *      -> 2 invalid format
+     *      -> 3 error on command
+     */
+    char request_copy[MAX_REQUEST_SIZE];
+    char *command;
+    char *arg1, *arg2, *arg3, *arg4, *arg5, *arg6, *end;
+
+    strcpy(request_copy, request);
+    command = strtok(request_copy, " ");
+
+    // Interpret the command
+    if ( strcmp(command, "help")==0 ) {
+        // HELP
+        end = strtok(NULL, " ");
+        if ( end!=NULL ) {
+            sprintf(response, "Invalid format:\n\t-> help\n");
+            return 2;
+        }
+        if ( cmd_help(response)!=0 ) {
+            sprintf(response, "!!Error!! on help command\n");
+            return 3;
+        }
+        return 0;
     
 
-    //insertD(doentes,d);
+    } else if ( strcmp(command, "add_doente")==0 ) {
+        // ADD_DOENTE
+        arg1 = strtok(NULL, " ");
+        arg2 = strtok(NULL, " ");
+        arg3 = strtok(NULL, " ");
+        arg4 = strtok(NULL, " ");
+        arg5 = strtok(NULL, " ");
+        arg6 = strtok(NULL, " ");
+        end = strtok(NULL, " ");
+        if ( arg1==NULL || arg2==NULL || arg3==NULL || arg4==NULL || arg5==NULL || arg6==NULL || end!=NULL ) {
+            sprintf(response, "Invalid format:\n\t-> add_doente <id> <name> <birthday> <cc> <tele> <email>\n");
+            return 2;
+        }
+        if ( cmd_AddDoente(ListD, atoi(arg1), arg2, arg3, arg4, atoi(arg5), arg6, response)!=0 ) {
+            sprintf(response, "!!Error!! on add_doente command\n");
+            return 3;
+        }
+        return 0;
 
-    /*if ((d1 = searchDoente_byID(doentes,3)) != NULL){
-        print_Doente(*d1);
-    }*/
-    removeD(doentes,3);
-    print_Alpha(doentes);
 
-    destroyListD(doentes);
-    return 0;
+    } else if ( strcmp(command, "rmv_doente")==0 ) {
+        // RMV_DOENTE
+        arg1 = strtok(NULL, " ");
+        end = strtok(NULL, " ");
+        if ( arg1==NULL || end!=NULL ) {
+            sprintf(response, "Invalid format:\n\t-> rmv_doente <name>\n");
+            return 2;
+        }
+        if ( cmd_RmvDoente(ListD, arg1, response)!=0 ) {
+            sprintf(response, "!!Error!! on rmv_doente command\n");
+            return 3;
+        }
+        return 0;
+
+
+    } else if ( strcmp(command, "list_alpha")==0 ) {
+        // LIST_ALPHA
+        end = strtok(NULL, " ");
+        if ( end!=NULL ) {
+            sprintf(response, "Invalid format:\n\t-> list_alpha\n");
+            return 2;
+        }
+        if ( cmd_listAlpha(ListD, response)!=0 ) {
+            sprintf(response, "!!Error!! on list_alpha command\n");
+            return 3;
+        }
+        return 0;
+
+
+    } else if ( strcmp(command, "list_tens")==0 ) {
+        // LIST_TENS
+        arg1 = strtok(NULL, " ");
+        arg2 = strtok(NULL, " ");
+        end = strtok(NULL, " ");
+        if ( arg1==NULL || arg2==NULL || end!=NULL ) {
+            sprintf(response, "Invalid format:\n\t-> list_tens <id> <min_tension>\n");
+            return 2;
+        }
+        if ( cmd_listTens(ListD, ListR, atoi(arg1), atoi(arg2), response)!=0 ) {
+            sprintf(response, "!!Error!! on list_tens command\n");
+            return 3;
+        }
+        return 0;
+
+
+    } else if ( strcmp(command, "display_doente")==0 ) {
+        // DISPLAY_DOENTE
+        arg1 = strtok(NULL, " ");
+        end = strtok(NULL, " ");
+        if ( arg1==NULL || end!=NULL ) {
+            sprintf(response, "Invalid format:\n\t-> display_doente <name>\n");
+            return 2;
+        }
+        if ( cmd_displayDoente(ListD, ListR, arg1, response)!=0 ) {
+            sprintf(response, "!!Error!! on display_doente command\n");
+            return 3;
+        }
+        return 0;
+
+
+    } else if ( strcmp(command, "add_registo")==0 ) {
+        // ADD_REGISTO
+        arg1 = strtok(NULL, " ");
+        arg2 = strtok(NULL, " ");
+        arg3 = strtok(NULL, " ");
+        arg4 = strtok(NULL, " ");
+        arg5 = strtok(NULL, " ");
+        arg6 = strtok(NULL, " ");
+        end = strtok(NULL, " ");
+        if ( arg1==NULL || arg2==NULL || arg3==NULL || arg4==NULL || arg5==NULL || arg6==NULL || end!=NULL ) {
+            sprintf(response, "Invalid format:\n\t-> add_registo <id> <date> <tens_max> <tens_min> <weight> <height>\n");
+            return 2;
+        }
+        if ( cmd_AddRegisto(ListD, ListR, atoi(arg1), arg2, atoi(arg3), atoi(arg4), atoi(arg5), atoi(arg6), response)!=0 ) {
+            sprintf(response, "!!Error!! on add_registo command\n");
+            return 3;
+        }
+        return 0;
+    }
+
+
+    sprintf(response, "Command not found!\n\t-> Try \"help\" for list of commands\n");
+    return 1;
 }
