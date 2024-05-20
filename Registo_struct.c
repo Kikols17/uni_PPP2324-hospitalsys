@@ -159,14 +159,31 @@ struct NodeRegisto *setNodeRegisto(struct NodeRegisto *node, struct Registo *reg
     return node;
 }
 
-int destroyNodeRegisto(struct NodeRegisto *node) {
+int destroyNodeRegisto(struct ListaRegisto *listaR, struct NodeRegisto *nodeR) {
     /* Frees memory allocated for a "NodeRegisto" struct
      */
-    if (destroyRegisto(node->registo)!=0) {
-        // error destroying registo
+    if (nodeR == NULL) {
+        // invalid pointer
         return -1;
     }
-    free(node);
+
+    struct NodeRegisto *auxPrev, *auxNext;
+    auxPrev = nodeR->prev;
+    auxNext = nodeR->next;
+    if (auxPrev != NULL) {
+        // store prev node
+        auxPrev->next = auxNext;
+    } else {
+        // node is first, update first
+        listaR->first = auxNext;
+    }
+    if (auxNext != NULL) {
+        // store next node
+        auxNext->prev = auxPrev;
+    }
+
+    destroyRegisto(nodeR->registo);
+    free(nodeR);
     return 0;
 }
 
@@ -221,7 +238,7 @@ int destroyListaRegisto(struct ListaRegisto *lista) {
     struct NodeRegisto *next = NULL;
     while (current != NULL) {
         next = current->next;
-        destroyNodeRegisto(current);
+        destroyNodeRegisto(lista, current);
         current = next;
     }
     free(lista);

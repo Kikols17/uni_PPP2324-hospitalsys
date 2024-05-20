@@ -40,7 +40,7 @@ int printRegisto(struct Registo *registo);
 // NodeRegisto ---------------------------------
 struct NodeRegisto *createNodeRegisto(struct Registo *registo);
 struct NodeRegisto *setNodeRegisto(struct NodeRegisto *node, struct Registo *registo);
-int destroyNodeRegisto(struct NodeRegisto *node);
+int destroyNodeRegisto(struct ListaRegisto *listaR, struct NodeRegisto *nodeR);
 int swapNodeRegisto(struct NodeRegisto *node1, struct NodeRegisto *node2);
 int printNodeRegisto(struct NodeRegisto *node);
 

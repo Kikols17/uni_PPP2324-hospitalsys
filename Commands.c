@@ -97,7 +97,7 @@ int cmd_RmvDoente(struct ListaDoente *listaD, char *name, char *response) {
         sprintf(response+strlen(response), "->!ERROR!\n\t-> Doente not in system\n");
         return 1;
     }
-    if ( destroyNodeDoente(listaD, node)==-1 ) {
+    if ( destroyNodeDoente(listaD, node)!=0 ) {
         sprintf(response+strlen(response), "->!ERROR!\n\t-> Error destroying node\n");
         return -1;
     }
