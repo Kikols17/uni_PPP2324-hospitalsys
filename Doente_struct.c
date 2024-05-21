@@ -101,7 +101,7 @@ int copyDoente(struct Doente *dest, struct Doente *src) {
 
 }
 
-int destroyDoente(Doente *doente) {
+int destroyDoente(struct Doente *doente) {
     /* Frees the memory allocated for the Doente struct */
     if (doente == NULL) {
         // invalid pointer
@@ -112,7 +112,7 @@ int destroyDoente(Doente *doente) {
     return 0;
 }
 
-int printDoente(Doente *doente) {
+int printDoente(struct Doente *doente) {
     /* Prints the Doente struct
      * Returns:
      *      -> -1 if Doente pointer is NULL
@@ -126,6 +126,24 @@ int printDoente(Doente *doente) {
     char buff[DATA_STRING_SIZE];
     data_toStr(&doente->birthday, buff);
     printf("ID: %d\nName: %s\nBirthday: %s\nCC: %s\nTele: %d\nEmail: %s\n", doente->id, doente->name, buff, doente->cc, doente->tele, doente->email);
+
+    return 0;
+}
+
+int tostrDoente(struct Doente *doente, char *str) {
+    /* Converts the Doente struct to a string
+     * Returns:
+     *      -> -1 if Doente pointer is NULL
+     *     ->  0 if success
+     */
+    if (doente == NULL) {
+        // invalid pointer
+        return -1;
+    }
+
+    char buff[DATA_STRING_SIZE];
+    data_toStr(&doente->birthday, buff);
+    sprintf(str, "ID: %d\nName: %s\nBirthday: %s\nCC: %s\nTele: %d\nEmail: %s\n", doente->id, doente->name, buff, doente->cc, doente->tele, doente->email);
 
     return 0;
 }
@@ -242,6 +260,20 @@ int printNodeDoente(struct NodeDoente *nodeD) {
     printDoente(nodeD->doente);
     printf("self->%p\nprev->%p\nnext->%p\n", nodeD, nodeD->prev, nodeD->next);
     return 0;
+}
+
+int tostrNodeDoente(struct NodeDoente *nodeD, char *str) {
+    /* Converts the NodeDoente struct to a string
+     * Returns:
+     *      -> -1 if NodeDoente pointer is NULL
+     *     ->  0 if success
+     */
+    if (nodeD == NULL) {
+        // invalid pointer
+        return -1;
+    }
+
+    return tostrDoente(nodeD->doente, str);
 }
 
 

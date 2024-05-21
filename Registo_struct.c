@@ -114,6 +114,23 @@ int printRegisto(struct Registo *registo) {
     return 0;
 }
 
+int tostrRegisto(struct Registo *registo, char *str) {
+    /* Converts the info of a "Registo" struct to a string
+     * Returns:
+     *      -> -1 if invalid pointer
+     *      -> 0 if success
+     */
+    if (registo == NULL) {
+        // invalid pointer
+        return -1;
+    }
+
+    char strData[DATA_STRING_SIZE];
+    data_toStr(&registo->date, strData);
+    sprintf(str, "Registo %d:\n\tDate: %s\n\tTensão Máxima: %d\n\tTensão Mínima: %d\n\tPeso: %d\n\tAltura: %d\n", registo->id, strData, registo->tens_max, registo->tens_min, registo->weight, registo->height);
+    return 0;
+}
+
 
 
 // NodeRegisto struct
@@ -210,6 +227,20 @@ int printNodeRegisto(struct NodeRegisto *node) {
     return 0;
 }
 
+int tostrNodeRegisto(struct NodeRegisto *node, char *str) {
+    /* Converts the info of a "NodeRegisto" struct to a string
+     * Returns:
+     *      -> -1 if invalid pointer
+     *      -> 0 if success
+     */
+    if (node == NULL) {
+        // invalid pointer
+        return -1;
+    }
+
+    tostrRegisto(node->registo, str);
+    return 0;
+}
 
 
 // ListaRegisto struct

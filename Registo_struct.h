@@ -36,6 +36,7 @@ struct Registo *createCopyRegisto(struct Registo *registo);
 int copyRegisto(struct Registo *registo1, struct Registo *registo2);
 int destroyRegisto(struct Registo *registo);
 int printRegisto(struct Registo *registo);
+int tostrRegisto(struct Registo *registo, char *str);
 
 // NodeRegisto ---------------------------------
 struct NodeRegisto *createNodeRegisto(struct Registo *registo);
@@ -43,6 +44,7 @@ struct NodeRegisto *setNodeRegisto(struct NodeRegisto *node, struct Registo *reg
 int destroyNodeRegisto(struct ListaRegisto *listaR, struct NodeRegisto *nodeR);
 int swapNodeRegisto(struct NodeRegisto *node1, struct NodeRegisto *node2);
 int printNodeRegisto(struct NodeRegisto *node);
+int tostrNodeRegisto(struct NodeRegisto *node, char *str);
 
 // ListaRegisto ---------------------------------
 struct ListaRegisto *createListaRegisto();

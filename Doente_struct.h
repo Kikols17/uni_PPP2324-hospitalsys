@@ -35,15 +35,18 @@ Doente *createDoente(int id, char *name, struct Data *birthday, char *cc, int te
 Doente *createEmptyDoente();
 int setDoente(struct Doente *doente, int id, char *name, struct Data *birthday, char *cc, int tele, char *email);
 int copyDoente(struct Doente *dest, struct Doente *src);
-int destroyDoente(Doente *doente);
-int printDoente(Doente *doente);
+int destroyDoente(struct Doente *doente);
+int printDoente(struct Doente *doente);
+int tostrDoente(struct Doente *doente, char *str);
 
 
 // NodeDoente ---------------------------------
 struct NodeDoente *createNodeDoente(Doente *doente);
 int setNodeDoente(struct NodeDoente *nodeD, Doente *doente);
 int destroyNodeDoente(struct ListaDoente *listaD, struct NodeDoente *nodeD);
+int swapNodeDoente(struct NodeDoente *node1, struct NodeDoente *node2);
 int printNodeDoente(struct NodeDoente *nodeD);
+int tostrNodeDoente(struct NodeDoente *nodeD, char *str);
 
 
 // ListaDoente ---------------------------------
