@@ -12,6 +12,8 @@ files:
 	> registos.txt
 	echo "2\n23/5/2023\n125\n80\n56\n160" >> registos.txt
 	echo "1\n6/1/2024\n128\n78\n55\n160" >> registos.txt
+	echo "1\n1/5/2024\n120\n90\n56\n161" >> registos.txt
+	echo "1\n5/5/2024\n121\n100\n56\n162" >> registos.txt
 
 
 
