@@ -29,7 +29,7 @@ Doente *createDoente(int id, char *name, struct Data *birthday, char *cc, int te
     strcpy(new_Doente->name, name);
     if ( Datacpy(&new_Doente->birthday, birthday)!=0 ) {
         // invalid date
-        free(new_Doente);
+        destroyDoente(new_Doente);
         return NULL;
     }
     strcpy(new_Doente->cc, cc);

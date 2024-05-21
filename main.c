@@ -107,7 +107,7 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
             return 2;
         }
         if ( cmd_AddDoente(ListD, arg1, arg2, arg3, atoi(arg4), arg5, response)<0 ) {
-            sprintf(response+strlen(response), "!!Error!! on add_doente command\n");
+            //sprintf(response+strlen(response), "!!Error!! on add_doente command\n");
             return 3;
         }
         return 0;
@@ -122,7 +122,7 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
             return 2;
         }
         if ( cmd_RmvDoente(ListD, ListR, arg1, response)<0 ) {
-            sprintf(response+strlen(response), "!!Error!! on rmv_doente command\n");
+            //sprintf(response+strlen(response), "!!Error!! on rmv_doente command\n");
             return 3;
         }
         return 0;
@@ -136,7 +136,7 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
             return 2;
         }
         if ( cmd_listAlpha(ListD, response)<0 ) {
-            sprintf(response+strlen(response), "!!Error!! on list command\n");
+            //sprintf(response+strlen(response), "!!Error!! on list command\n");
             return 3;
         }
         return 0;
@@ -152,7 +152,7 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
             return 2;
         }
         if ( cmd_listTens(ListD, ListR, atoi(arg1), atoi(arg2), response)<0 ) {
-            sprintf(response+strlen(response), "!!Error!! on list_tens command\n");
+            //sprintf(response+strlen(response), "!!Error!! on list_tens command\n");
             return 3;
         }
         return 0;
@@ -167,7 +167,7 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
             return 2;
         }
         if ( cmd_displayDoente(ListD, ListR, arg1, response)<0 ) {
-            sprintf(response+strlen(response), "!!Error!! on display_doente command\n");
+            //sprintf(response+strlen(response), "!!Error!! on display_doente command\n");
             return 3;
         }
         return 0;
@@ -187,7 +187,7 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
             return 2;
         }
         if ( cmd_AddRegisto(ListD, ListR, atoi(arg1), arg2, atoi(arg3), atoi(arg4), atoi(arg5), atoi(arg6), response)<0 ) {
-            sprintf(response+strlen(response), "!!Error!! on add_registo command\n");
+            //sprintf(response+strlen(response), "!!Error!! on add_registo command\n");
             return 3;
         }
         return 0;

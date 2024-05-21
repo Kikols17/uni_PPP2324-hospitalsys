@@ -41,12 +41,29 @@ int cmd_AddDoente(struct ListaDoente *listaD, char *name, char *birthday_char, c
     char auxbuff[DATA_STRING_SIZE];
     int ret;
 
+    // validate birthday
     strcpy(auxbuff, birthday_char);
     if ( str_toData(auxbuff, &birthday)!=0 ) {
         // data not in format "dd/mm/yyyy" or not valid
-        sprintf(response+strlen(response), "->!ERROR!\n\t-> Invalid date\n");
+        sprintf(response+strlen(response), "->!ERROR!\n\t-> Invalid birthday    dd/mm/yyyy\n");
         return -2;
     }
+
+    // validate cc (must be in format 00000000-0-AA0)
+    if ( strlen(cc)!=CHARS_CC-1 || cc[8]!='-' || cc[10]!='-' ) {
+        // invalid cc
+        sprintf(response+strlen(response), "->!ERROR!\n\t-> Invalid cc          00000000-0-AAA\n");
+        return -2;
+    }
+
+    // validate tele (must have 9 digits)
+    if ( !(tele>=100000000 && tele<=999999999) ) {
+        // invalid tele
+        sprintf(response+strlen(response), "->!ERROR!\n\t-> Invalid tele        123456789\n");
+        return -2;
+    }
+
+
 
     // find next available ID
     struct NodeDoente *cur = listaD->first;
@@ -66,12 +83,12 @@ int cmd_AddDoente(struct ListaDoente *listaD, char *name, char *birthday_char, c
 
     struct Doente *doente = createDoente(id, name, &birthday, cc, tele, email);
     if ( doente==NULL ) {
-        sprintf(response+strlen(response), "->!ERROR!\n\t-> Error creating doente:\n\tNot enought memory.\n");
+        sprintf(response+strlen(response), "->!ERROR!\n\t-> Error creating doente:\n\t\tNot enought memory\n");
         return -1;
     }
     struct NodeDoente *node = createNodeDoente(doente);
     if ( node==NULL ) {
-        sprintf(response+strlen(response), "->!ERROR!\n\t-> Error creating node:\n\tNot enought memory.\n");
+        sprintf(response+strlen(response), "->!ERROR!\n\t-> Error creating node:\n\t\tNot enought memory.\n");
         destroyDoente(doente);
         return -1;
     }
