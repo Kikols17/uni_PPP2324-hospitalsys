@@ -16,7 +16,6 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
 
 
 int main() {
-
     struct ListaDoente *ListD = createListaDoente();
     struct ListaRegisto *ListR = createListaRegisto();
     if ( ListD==NULL || ListR==NULL ) {
@@ -30,7 +29,7 @@ int main() {
     printf("Welcome to the Health System\n\t-> Try \"help\" for list of commands\n\n");
     ListaDoente_readFile(DOENTE_FILEPATH, ListD);
     printf("Loading from file: \"%s\"\n", DOENTE_FILEPATH);
-    ListaRegisto_readFile(REGISTO_FILEPATH, ListR);
+    //ListaRegisto_readFile(REGISTO_FILEPATH, ListR);
     printf("Loading from file: \"%s\"\n", REGISTO_FILEPATH);
     while (1) {
         printf("\033[1;31m");

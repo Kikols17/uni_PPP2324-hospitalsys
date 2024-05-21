@@ -97,6 +97,8 @@ int destroyRegisto(struct Registo *registo) {
         return -1;
     }
     free(registo);
+    //printf("free");
+    registo = NULL;
     return 0;
 }
 
@@ -201,6 +203,8 @@ int destroyNodeRegisto(struct ListaRegisto *listaR, struct NodeRegisto *nodeR) {
 
     destroyRegisto(nodeR->registo);
     free(nodeR);
+    //printf("free");
+    nodeR = NULL;
     return 0;
 }
 
@@ -265,14 +269,15 @@ struct ListaRegisto *createListaRegisto() {
 int destroyListaRegisto(struct ListaRegisto *lista) {
     /* Frees memory allocated for a "ListaRegisto" struct
      */
-    struct NodeRegisto *current = lista->first;
+    struct NodeRegisto *cur = lista->first;
     struct NodeRegisto *next = NULL;
-    while (current != NULL) {
-        next = current->next;
-        destroyNodeRegisto(lista, current);
-        current = next;
+    while (cur != NULL) {
+        next = cur->next;
+        destroyNodeRegisto(lista, cur);
+        cur = next;
     }
     free(lista);
+    //printf("free");
     return 0;
 }
 
@@ -494,7 +499,7 @@ int ListaRegisto_toFile(char *filename, struct ListaRegisto *lista) {
     return 0;
 }
 
-int ListaRegisto_readFile(char *filename, struct ListaRegisto *lista) {
+int ListaRegisto_readFile(char *filename, struct ListaRegisto *ListR) {
     /* Reads the info of a "ListaRegisto" struct from a file
      * Returns:
      *      -> 0 if success
@@ -507,26 +512,42 @@ int ListaRegisto_readFile(char *filename, struct ListaRegisto *lista) {
         return -1;
     }
 
-    struct Registo *new_registo;
-    int ret = 0;
-    while (1) {
-        new_registo = createEmptyRegisto();
-        ret = Registo_readFile(file, new_registo);
-        if (ret==0) {
-            // success
-            pushListaRegisto(lista, createNodeRegisto(new_registo));
-        } else if (ret==1) {
-            // EOF
-            break;
-        } else {
-            // error reading file
-            destroyRegisto(new_registo);
+    struct Registo *new_Registo;
+    struct NodeRegisto * new_NodeRegisto;
+
+    new_Registo = createEmptyRegisto();
+    if ( new_Registo==NULL ) {
+        // malloc failed
+        fclose(file);
+        return -2;
+    }
+
+    while ( Registo_readFile(file, new_Registo) ) {
+        new_NodeRegisto = createNodeRegisto(new_Registo);
+        if ( new_NodeRegisto==NULL ) {
+            // malloc failed
+            fclose(file);
+            destroyRegisto(new_Registo);
+            return -2;
+        }
+
+        if ( pushListaRegisto(ListR, new_NodeRegisto)!=0 ) {    // push registo to list
+            // error adding node to list
+            fclose(file);
+            destroyNodeRegisto(ListR, new_NodeRegisto);
+            return -2;
+        }
+
+        new_Registo = createEmptyRegisto();
+        if ( new_Registo==NULL ) {
+            // malloc failed
             fclose(file);
             return -2;
         }
     }
 
-    destroyRegisto(new_registo);
+    destroyRegisto(new_Registo);
+
     fclose(file);
     return 0;
 }

@@ -109,6 +109,8 @@ int destroyDoente(struct Doente *doente) {
     }
 
     free(doente);
+    //printf("free");
+    doente = NULL;
     return 0;
 }
 
@@ -221,9 +223,11 @@ int destroyNodeDoente(struct ListaDoente *listaD, struct NodeDoente *nodeD) {
         auxNext->prev = auxPrev;
     }
 
-    // free memory
+    // Free memory
     destroyDoente(nodeD->doente);
     free(nodeD);
+    //printf("free");
+    nodeD = NULL;
     return 0;
 }
 
@@ -308,14 +312,16 @@ int destroyListaDoente(struct ListaDoente *listD) {
     }
 
     struct NodeDoente *cur = listD->first;
-    struct NodeDoente *aux;
+    struct NodeDoente *next;
     while (cur != NULL) {
-        aux = cur->next;
+        next = cur->next;
         destroyNodeDoente(listD, cur);
-        cur = aux;
+        cur = next;
     }
 
     free(listD);
+    //printf("free");
+    listD = NULL;
     return 0;
 }
 
@@ -635,6 +641,11 @@ int ListaDoente_readFile(char *filepath, struct ListaDoente *listD) {
      */
     if (listD == NULL) {
         // invalid pointer
+        return -1;
+    }
+
+    if ( listD->first!=NULL ) {
+        // list is not empty
         return 1;
     }
 
@@ -644,16 +655,30 @@ int ListaDoente_readFile(char *filepath, struct ListaDoente *listD) {
         return -1;
     }
 
-    struct Doente *new_Doente = createEmptyDoente();        // create new doente
+    struct Doente *new_Doente;          // create new doente
     struct NodeDoente *new_NodeDoente;
+
+    new_Doente = createEmptyDoente();
+    if (new_Doente==NULL) {
+        // malloc failed
+        fclose(file);
+        return -2;
+    }
     while ( Doente_readFile(file, new_Doente)==0 ) {
         new_NodeDoente = createNodeDoente(new_Doente);      // } create node
         if (new_NodeDoente == NULL) {
-            // malloc failed
+            // node malloc failed, discart doente
             fclose(file);
+            destroyDoente(new_Doente);
             return -2;
         }
-        pushListDoente(listD, new_NodeDoente);              // push node to list
+
+        if ( pushListDoente(listD, new_NodeDoente)!=0 ) {   // push node to list
+            // error pushing to list, discart node
+            fclose(file);
+            destroyNodeDoente(listD, new_NodeDoente);
+            return -2;
+        }
 
         new_Doente = createEmptyDoente();                   // create new doente
         if (new_Doente == NULL) {
@@ -661,8 +686,10 @@ int ListaDoente_readFile(char *filepath, struct ListaDoente *listD) {
             fclose(file);
             return -2;
         }
+
     }
 
+    destroyDoente(new_Doente);
 
     fclose(file);
     return 0;
