@@ -8,7 +8,8 @@
 #include "Data_struct.h"
 
 #define MAX_REQUEST_SIZE 1024
-
+#define DOENTE_FILEPATH "doentes.txt"
+#define REGISTO_FILEPATH "registos.txt"
 
 int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char *request, char *response);
 
@@ -27,6 +28,10 @@ int main() {
     char response[MAX_REQUEST_SIZE];
 
     printf("Welcome to the Health System\n\t-> Try \"help\" for list of commands\n\n");
+    ListaDoente_readFile(DOENTE_FILEPATH, ListD);
+    printf("Loading from file: \"%s\"\n", DOENTE_FILEPATH);
+    ListaRegisto_readFile(REGISTO_FILEPATH, ListR);
+    printf("Loading from file: \"%s\"\n", REGISTO_FILEPATH);
     while (1) {
         printf("> ");
         fgets(request, MAX_REQUEST_SIZE, stdin);
