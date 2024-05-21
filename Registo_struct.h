@@ -54,6 +54,7 @@ struct NodeRegisto *findIDListRegisto(struct ListaRegisto *lista, int id);
 
 int sortListRegistoID(struct ListaRegisto *lista);
 int printListaRegisto(struct ListaRegisto *lista);
+int tostrListaRegisto(struct ListaRegisto *lista, char *str);
 
 // File ---------------------------------
 int Registo_appendFile(FILE *file, Registo *registo);

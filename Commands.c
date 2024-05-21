@@ -225,8 +225,7 @@ int cmd_listTens(struct ListaDoente *listaD, struct ListaRegisto *listaR, int id
         // if min_tension is -1, don't print the message, it means we want to list all registo's from doente with ID "id"
         sprintf(response+strlen(response), "Registo's from doente \"%s\" with ID%d with tension above %d:\n", curD->doente->name, id, min_tension);
     }
-    printListaRegisto(tempList);
-    // [TODO] write to buffer in better way
+    tostrListaRegisto(tempList, response+strlen(response));
 
     // destroy temporary list
     destroyListaRegisto(tempList);
@@ -252,7 +251,7 @@ int cmd_displayDoente(struct ListaDoente *listaD, struct ListaRegisto *listaR, c
     }
     // display doente's information
     sprintf(response+strlen(response), "Doente \"%s\" with ID%d:\n", auxbuff, node->doente->id);
-    printDoente(node->doente);
+    tostrDoente(node->doente, response+strlen(response));
 
     // fetch all registo's from doente with ID "id".
     return cmd_listTens(listaD, listaR, node->doente->id, -1, response);

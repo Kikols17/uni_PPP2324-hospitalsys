@@ -143,7 +143,7 @@ int tostrDoente(struct Doente *doente, char *str) {
 
     char buff[DATA_STRING_SIZE];
     data_toStr(&doente->birthday, buff);
-    sprintf(str, "ID: %d\nName: %s\nBirthday: %s\nCC: %s\nTele: %d\nEmail: %s\n", doente->id, doente->name, buff, doente->cc, doente->tele, doente->email);
+    sprintf(str+strlen(str), "ID: %d\nName: %s\nBirthday: %s\nCC: %s\nTele: %d\nEmail: %s\n", doente->id, doente->name, buff, doente->cc, doente->tele, doente->email);
 
     return 0;
 }
@@ -424,6 +424,7 @@ struct NodeDoente *findIDListDoente(struct ListaDoente *listD, int id) {
     return NULL;
 }
 
+
 int sortListDoenteID(struct ListaDoente *lista) {
     /* Sorts a "ListaRegisto" struct by ID with simple Bubble Sort
      * Returns:
@@ -500,6 +501,26 @@ int printListDoente(struct ListaDoente *listD) {
     return 0;
 }
 
+int tostrListaDoente(struct ListaDoente *lista, char *str) {
+    /* Converts the ListRegisto struct to a string
+     * Returns:
+     *      -> -1 if ListRegisto pointer is NULL
+     *     ->  0 if success
+     */
+    if (lista == NULL) {
+        // invalid pointer
+        return -1;
+    }
+
+    struct NodeDoente *cur = lista->first;
+    while (cur != NULL) {
+        tostrNodeDoente(cur, str);
+        cur = cur->next;
+    }
+
+    return 0;
+
+}
 
 
 // File ---------------------------------

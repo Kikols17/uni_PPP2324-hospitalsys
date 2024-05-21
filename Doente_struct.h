@@ -59,6 +59,7 @@ struct NodeDoente *findIDListDoente(struct ListaDoente *listD, int id);
 int sortListDoenteID(struct ListaDoente *lista);
 int sortListDoenteAlpha(struct ListaDoente *lista);
 int printListDoente(struct ListaDoente *listD);
+int tostrListDoente(struct ListaDoente *listD, char *str);
 
 
 // File ---------------------------------
