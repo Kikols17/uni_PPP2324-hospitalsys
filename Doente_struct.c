@@ -178,6 +178,10 @@ int destroyNodeDoente(struct ListaDoente *listaD, struct NodeDoente *nodeD) {
      *      -> -1 date pointer is NULL
      *      -> 0 if success
      */
+    if (listaD == NULL) {
+        // invalid pointer
+        return -1;
+    }
     if (nodeD == NULL) {
         // invalid pointer
         return -1;
@@ -190,7 +194,7 @@ int destroyNodeDoente(struct ListaDoente *listaD, struct NodeDoente *nodeD) {
     if (auxPrev != NULL) {
         // store prev node
         auxPrev->next = auxNext;
-    } else {
+    } else if ( listaD->first==nodeD ) {
         // node is first, update first
         listaD->first = auxNext;
     }
@@ -297,11 +301,12 @@ int pushListDoente(struct ListaDoente *listD, struct NodeDoente *nodeD) {
         // invalid pointer
         return -1;
     }
-    if (listD->first == NULL) {
+    if ( listD->first==NULL ) {
         listD->first = nodeD;
         return 0;
     }
 
+    // look for repeated values before inserting
     struct NodeDoente *cur = listD->first;
     while ( cur->next!=NULL ) {
         if (cur->doente->id == nodeD->doente->id) {

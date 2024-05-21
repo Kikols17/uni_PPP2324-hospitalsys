@@ -28,7 +28,7 @@ int cmd_help(char *response) {
 }
 
 
-int cmd_AddDoente(struct ListaDoente *listaD, int id, char *name, char *birthday_char, char *cc, int tele, char *email, char *response) {
+int cmd_AddDoente(struct ListaDoente *listaD, char *name, char *birthday_char, char *cc, int tele, char *email, char *response) {
     /* Adds a doente to the list
      * 
      * Returns:
@@ -47,20 +47,34 @@ int cmd_AddDoente(struct ListaDoente *listaD, int id, char *name, char *birthday
         sprintf(response+strlen(response), "->!ERROR!\n\t-> Invalid date\n");
         return -2;
     }
-    printf("Date validated\n");
+
+    // find next available ID
+    struct NodeDoente *cur = listaD->first;
+    int id=0;
+    sortListDoenteID(listaD);
+    while ( cur!=NULL ) {
+        if ( cur->doente->id==id ) {
+            // used ID found, increment
+            id++;
+            cur = listaD->first;
+        } else {
+            // unused ID found, use it
+            cur = cur->next;
+            break;
+        }
+    }
+
     struct Doente *doente = createDoente(id, name, &birthday, cc, tele, email);
     if ( doente==NULL ) {
-        sprintf(response+strlen(response), "->!ERROR!\n\t-> Error creating doente\n");
+        sprintf(response+strlen(response), "->!ERROR!\n\t-> Error creating doente:\n\tNot enought memory.\n");
         return -1;
     }
-    printf("Doente created\n");
     struct NodeDoente *node = createNodeDoente(doente);
     if ( node==NULL ) {
-        sprintf(response+strlen(response), "->!ERROR!\n\t-> Error creating node\n");
+        sprintf(response+strlen(response), "->!ERROR!\n\t-> Error creating node:\n\tNot enought memory.\n");
         destroyDoente(doente);
         return -1;
     }
-    printf("Node created\n");
 
     ret = pushListDoente(listaD, node);
     if ( ret==-1 ) {

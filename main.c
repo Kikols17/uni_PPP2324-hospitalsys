@@ -101,13 +101,12 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
         arg3 = strtok(NULL, " ");
         arg4 = strtok(NULL, " ");
         arg5 = strtok(NULL, " ");
-        arg6 = strtok(NULL, " ");
         end = strtok(NULL, " ");
-        if ( arg1==NULL || arg2==NULL || arg3==NULL || arg4==NULL || arg5==NULL || arg6==NULL || end!=NULL ) {
-            sprintf(response+strlen(response), "Invalid format:\n\t-> add_doente <id> <name> <birthday> <cc> <tele> <email>\n");
+        if ( arg1==NULL || arg2==NULL || arg3==NULL || arg4==NULL || arg5==NULL || end!=NULL ) {
+            sprintf(response+strlen(response), "Invalid format:\n\t-> add_doente <name> <birthday> <cc> <tele> <email>\n");
             return 2;
         }
-        if ( cmd_AddDoente(ListD, atoi(arg1), arg2, arg3, arg4, atoi(arg5), arg6, response)<0 ) {
+        if ( cmd_AddDoente(ListD, arg1, arg2, arg3, atoi(arg4), arg5, response)<0 ) {
             sprintf(response+strlen(response), "!!Error!! on add_doente command\n");
             return 3;
         }
