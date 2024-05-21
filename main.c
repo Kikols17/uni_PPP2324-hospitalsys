@@ -128,15 +128,15 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
         return 0;
 
 
-    } else if ( strcmp(command, "list_alpha")==0 ) {
+    } else if ( strcmp(command, "list")==0 ) {
         // LIST_ALPHA
         end = strtok(NULL, " ");
         if ( end!=NULL ) {
-            sprintf(response+strlen(response), "Invalid format:\n\t-> list_alpha\n");
+            sprintf(response+strlen(response), "Invalid format:\n\t-> list\n");
             return 2;
         }
         if ( cmd_listAlpha(ListD, response)<0 ) {
-            sprintf(response+strlen(response), "!!Error!! on list_alpha command\n");
+            sprintf(response+strlen(response), "!!Error!! on list command\n");
             return 3;
         }
         return 0;

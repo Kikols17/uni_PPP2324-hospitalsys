@@ -16,14 +16,14 @@
 int cmd_help(char *response) {
     /* Appends the help message to the response */
     sprintf(response+strlen(response), "Available commands:\n"
-                                       "\thelp\n"
-                                       "\texit\n"
-                                       "\tadd_doente <id> <name> <birthday> <cc> <tele> <email>\n"
-                                       "\trmv_doente <name>\n"
-                                       "\tlist_alpha\n"
-                                       "\tlist_tens <id> <min_tension>\n"
-                                       "\tdisplay_doente <name>\n"
-                                       "\tadd_registo\n");
+                                       "\t-> help\n"
+                                       "\t-> exit\n"
+                                       "\t-> add_doente <name> <birthday> <cc> <tele> <email>\n"
+                                       "\t-> rmv_doente <name>\n"
+                                       "\t-> list\n"
+                                       "\t-> list_tens <id> <min_tension>\n"
+                                       "\t-> display_doente <name>\n"
+                                       "\t-> add_registo\n");
     return 0;
 }
 
