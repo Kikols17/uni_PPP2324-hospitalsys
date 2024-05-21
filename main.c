@@ -48,6 +48,10 @@ int main() {
 
     printf("--EXITING--\n");
 
+    // destroy both lists
+    destroyListaDoente(ListD);
+    destroyListaRegisto(ListR);
+
     return 0;
 }
 
