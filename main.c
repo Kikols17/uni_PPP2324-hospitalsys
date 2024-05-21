@@ -33,15 +33,17 @@ int main() {
     ListaRegisto_readFile(REGISTO_FILEPATH, ListR);
     printf("Loading from file: \"%s\"\n", REGISTO_FILEPATH);
     while (1) {
-        printf("> ");
+        printf("\033[1;31m");
+        printf("\n\n> ");
         fgets(request, MAX_REQUEST_SIZE, stdin);
+        printf("\033[0m");
         request[strlen(request)-1] = '\0'; // remove '\n'
 
         response[0] = '\0';
         if (request_handler(ListD, ListR, request, response)==-1) {
             break;
         }
-        printf("%s\n\n", response);
+        printf("%s", response);
     }
 
     printf("--EXITING--\n");
@@ -68,6 +70,9 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
 
     strcpy(request_copy, request);
     command = strtok(request_copy, " ");
+    if ( command==NULL ) {
+        return 1;
+    }
 
     // Interpret the command
     if ( strcmp(command, "help")==0 ) {
@@ -96,29 +101,35 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
 
     } else if ( strcmp(command, "add_doente")==0 ) {
         // ADD_DOENTE
-        arg1 = strtok(NULL, " ");
+        // arg1 is all that is between the first and second "
+        arg1 = strtok(NULL, "\"");  // get the second "          add_doente "miguel castela" 12/04/2004 12345678-1-AAA 123456789 kiko@gmail.com
         arg2 = strtok(NULL, " ");
         arg3 = strtok(NULL, " ");
         arg4 = strtok(NULL, " ");
         arg5 = strtok(NULL, " ");
         end = strtok(NULL, " ");
-        if ( arg1==NULL || arg2==NULL || arg3==NULL || arg4==NULL || arg5==NULL || end!=NULL ) {
-            sprintf(response+strlen(response), "Invalid format:\n\t-> add_doente <name> <birthday> <cc> <tele> <email>\n");
+        if ( arg1==NULL || strlen(arg1)==0 || arg2==NULL || arg3==NULL || arg4==NULL || arg5==NULL || end!=NULL ) {
+            sprintf(response+strlen(response), "Invalid format:"
+                                               "\n\t-> add_doente \"name\" <birthday> <cc> <tele> <email>\n"
+                                               "\n\t\t(make sure that \"name\" is between \"\")\n");
             return 2;
         }
         if ( cmd_AddDoente(ListD, arg1, arg2, arg3, atoi(arg4), arg5, response)<0 ) {
             //sprintf(response+strlen(response), "!!Error!! on add_doente command\n");
             return 3;
         }
+        // add_doente "miguel castela" 12/04/2004 12345678-1-AAA 123456789 kiko@gmail.com
         return 0;
 
 
     } else if ( strcmp(command, "rmv_doente")==0 ) {
         // RMV_DOENTE
-        arg1 = strtok(NULL, " ");
+        // arg1 is all that is between the first and second "
+        arg1 = strtok(NULL, "\"");
         end = strtok(NULL, " ");
         if ( arg1==NULL || end!=NULL ) {
-            sprintf(response+strlen(response), "Invalid format:\n\t-> rmv_doente <name>\n");
+            sprintf(response+strlen(response), "Invalid format:\n\t-> rmv_doente <name>\n"
+                                               "\n\t\t(make sure that \"name\" is between \"\")\n");
             return 2;
         }
         if ( cmd_RmvDoente(ListD, ListR, arg1, response)<0 ) {
@@ -160,10 +171,12 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
 
     } else if ( strcmp(command, "display_doente")==0 ) {
         // DISPLAY_DOENTE
-        arg1 = strtok(NULL, " ");
+        // arg1 is all that is between the first and second "
+        arg1 = strtok(NULL, "\"");
         end = strtok(NULL, " ");
         if ( arg1==NULL || end!=NULL ) {
-            sprintf(response+strlen(response), "Invalid format:\n\t-> display_doente <name>\n");
+            sprintf(response+strlen(response), "Invalid format:\n\t-> display_doente <name>\n"
+                                               "\n\t\t(make sure that \"name\" is between \"\")\n");
             return 2;
         }
         if ( cmd_displayDoente(ListD, ListR, arg1, response)<0 ) {

@@ -143,7 +143,7 @@ int tostrDoente(struct Doente *doente, char *str) {
 
     char buff[DATA_STRING_SIZE];
     data_toStr(&doente->birthday, buff);
-    sprintf(str+strlen(str), "ID: %d\nName: %s\nBirthday: %s\nCC: %s\nTele: %d\nEmail: %s\n", doente->id, doente->name, buff, doente->cc, doente->tele, doente->email);
+    sprintf(str+strlen(str), "\tID: %d\n\tName: %s\n\tBirthday: %s\n\tCC: %s\n\tTele: %d\n\tEmail: %s\n", doente->id, doente->name, buff, doente->cc, doente->tele, doente->email);
 
     return 0;
 }

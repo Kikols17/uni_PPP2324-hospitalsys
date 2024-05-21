@@ -110,7 +110,7 @@ int printRegisto(struct Registo *registo) {
 
     char strData[DATA_STRING_SIZE];
     data_toStr(&registo->date, strData);
-    printf("Registo %d:\n\tDate: %s\n\tTensão Máxima: %d\n\tTensão Mínima: %d\n\tPeso: %d\n\tAltura: %d\n", registo->id, strData, registo->tens_max, registo->tens_min, registo->weight, registo->height);
+    printf("\tID %d\n\tDate: %s\n\tTensão Máxima: %d\n\tTensão Mínima: %d\n\tPeso: %d\n\tAltura: %d\n", registo->id, strData, registo->tens_max, registo->tens_min, registo->weight, registo->height);
     return 0;
 }
 
@@ -127,7 +127,7 @@ int tostrRegisto(struct Registo *registo, char *str) {
 
     char strData[DATA_STRING_SIZE];
     data_toStr(&registo->date, strData);
-    sprintf(str+strlen(str), "Registo %d:\n\tDate: %s\n\tTensão Máxima: %d\n\tTensão Mínima: %d\n\tPeso: %d\n\tAltura: %d\n", registo->id, strData, registo->tens_max, registo->tens_min, registo->weight, registo->height);
+    sprintf(str+strlen(str), "\tID %d\n\tDate: %s\n\tTensão Máxima: %d\n\tTensão Mínima: %d\n\tPeso: %d\n\tAltura: %d\n", registo->id, strData, registo->tens_max, registo->tens_min, registo->weight, registo->height);
     return 0;
 }
 
@@ -373,7 +373,10 @@ int tostrListaRegisto(struct ListaRegisto *lista, char *str) {
      *      -> 0 if success
      */
     struct NodeRegisto *current = lista->first;
-    while (current != NULL) {
+    while ( current!=NULL ) {
+        if ( current!=lista->first ) {
+            sprintf(str, "\n");
+        }
         if (tostrNodeRegisto(current, str)!=0) {
             // error converting node to string
             return -1;

@@ -18,11 +18,11 @@ int cmd_help(char *response) {
     sprintf(response+strlen(response), "Available commands:\n"
                                        "\t-> help\n"
                                        "\t-> exit\n"
-                                       "\t-> add_doente <name> <birthday> <cc> <tele> <email>\n"
-                                       "\t-> rmv_doente <name>\n"
+                                       "\t-> add_doente \"name\" <birthday> <cc> <tele> <email>\n"
+                                       "\t-> rmv_doente \"name\"\n"
                                        "\t-> list\n"
                                        "\t-> list_tens <id> <min_tension>\n"
-                                       "\t-> display_doente <name>\n"
+                                       "\t-> display_doente \"name\"\n"
                                        "\t-> add_registo\n");
     return 0;
 }
@@ -195,7 +195,7 @@ int cmd_listTens(struct ListaDoente *listaD, struct ListaRegisto *listaR, int id
     curR = findIDListRegisto(listaR, id);
     if ( curR==NULL ) {
         // Registo by ID not in system
-        sprintf(response+strlen(response), "Doente \"%s\" with id %d does not have any registo's\n", curD->doente->name, id);
+        sprintf(response+strlen(response), "->Doente \"%s\" with id %d does not have any registos\n", curD->doente->name, id);
         return 1;
     }
 
@@ -250,10 +250,11 @@ int cmd_displayDoente(struct ListaDoente *listaD, struct ListaRegisto *listaR, c
         return -1;
     }
     // display doente's information
-    sprintf(response+strlen(response), "Doente \"%s\" with ID%d:\n", auxbuff, node->doente->id);
+    sprintf(response+strlen(response), "->Doente \"%s\" with ID%d:\n", auxbuff, node->doente->id);
     tostrDoente(node->doente, response+strlen(response));
 
     // fetch all registo's from doente with ID "id".
+    sprintf(response+strlen(response), "\nRegistos:\n");
     return cmd_listTens(listaD, listaR, node->doente->id, -1, response);
 }
 
