@@ -32,7 +32,7 @@ int main() {
     ListaRegisto_readFile(REGISTO_FILEPATH, ListR);
     printf("Loading from file: \"%s\"\n", REGISTO_FILEPATH);
     while (1) {
-        printf("\033[1;31m");
+        printf("\033[1;36m");
         printf("\n\n> ");
         fgets(request, MAX_REQUEST_SIZE, stdin);
         printf("\033[0m");
