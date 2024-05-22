@@ -51,6 +51,6 @@ Commands.o: Commands.c Commands.h
 
 
 
-clean:
+clean: files
 	rm -f *o
 	rm -f *.exe
