@@ -44,7 +44,12 @@ struct Registo *createEmptyRegisto() {
      *      -> NULL if malloc fails
      *      -> valid pointer to Registo struct if success
      */
-    return createRegisto(0, createEmptyData(), 0, 0, 0, 0);
+    struct Data *emptyData = createEmptyData();
+    struct Registo *new_Registo = createRegisto(0, emptyData, 0, 0, 0, 0);
+
+    destroyData(emptyData);
+
+    return new_Registo;
 }
 
 struct Registo *createCopyRegisto(struct Registo *registo) {
@@ -276,8 +281,10 @@ int destroyListaRegisto(struct ListaRegisto *lista) {
         destroyNodeRegisto(lista, cur);
         cur = next;
     }
+
     free(lista);
-    //printf("free");
+    //printf("freeListaRegisto\n");
+    lista = NULL;
     return 0;
 }
 
@@ -297,12 +304,12 @@ int pushListaRegisto(struct ListaRegisto *lista, struct NodeRegisto *nodeR) {
         return 0;
     }
 
-    struct NodeRegisto *current = lista->first;
-    while (current->next != NULL) {
-        current = current->next;
+    struct NodeRegisto *cur = lista->first;
+    while (cur->next != NULL) {
+        cur = cur->next;
     }
-    current->next = nodeR;
-    nodeR->prev = current;
+    cur->next = nodeR;
+    nodeR->prev = cur;
     return 0;
 }
 
@@ -380,7 +387,7 @@ int tostrListaRegisto(struct ListaRegisto *lista, char *str) {
     struct NodeRegisto *current = lista->first;
     while ( current!=NULL ) {
         if ( current!=lista->first ) {
-            sprintf(str, "\n");
+            sprintf(str+strlen(str), "\n");
         }
         if (tostrNodeRegisto(current, str)!=0) {
             // error converting node to string
@@ -522,7 +529,7 @@ int ListaRegisto_readFile(char *filename, struct ListaRegisto *ListR) {
         return -2;
     }
 
-    while ( Registo_readFile(file, new_Registo) ) {
+    while ( Registo_readFile(file, new_Registo)==0 ) {
         new_NodeRegisto = createNodeRegisto(new_Registo);
         if ( new_NodeRegisto==NULL ) {
             // malloc failed

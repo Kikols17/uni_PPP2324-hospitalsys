@@ -320,6 +320,7 @@ int destroyListaDoente(struct ListaDoente *listD) {
     }
 
     free(listD);
+    //printf("free ListaDoente\n");
     //printf("free");
     listD = NULL;
     return 0;
@@ -346,6 +347,7 @@ int pushListDoente(struct ListaDoente *listD, struct NodeDoente *nodeD) {
 
     // look for repeated values before inserting
     struct NodeDoente *cur = listD->first;
+
     while ( cur->next!=NULL ) {
         if (cur->doente->id == nodeD->doente->id) {
             // can't have two doentes with the same ID
@@ -359,7 +361,6 @@ int pushListDoente(struct ListaDoente *listD, struct NodeDoente *nodeD) {
         }
         cur = cur->next;        // insert at the end
     }
-
     // check again for last node
     if (cur->doente->id == nodeD->doente->id) {
         // can't have two doentes with the same ID
