@@ -28,7 +28,7 @@ int cmd_help(char *response) {
 }
 
 
-int cmd_AddDoente(struct ListaDoente *listaD, char *name, char *birthday_char, char *cc, int tele, char *email, char *response) {
+int cmd_AddDoente(struct ListaDoente *listaD, char *filepath, char *name, char *birthday_char, char *cc, int tele, char *email, char *response) {
     /* Adds a doente to the list
      * 
      * Returns:
@@ -111,11 +111,22 @@ int cmd_AddDoente(struct ListaDoente *listaD, char *name, char *birthday_char, c
         destroyNodeDoente(listaD, node);
         return 1;
     }
+
+
     sprintf(response+strlen(response), "Doente \"%s\" with ID%d added to system\n", name, id);
+    
+    // save Doentes to file
+    sortListDoenteID(listaD);
+    if ( ListaDoente_toFile(filepath, listaD)!=0 ) {
+        sprintf(response+strlen(response), "->!ERROR!\n\t-> Error saving to file\n");
+        return -1;
+    } else {
+        sprintf(response+strlen(response), "\n\t-> Data saved to file\n");
+    }
     return 0;
 }
 
-int cmd_RmvDoente(struct ListaDoente *listaD, struct ListaRegisto *listR, char *name, char *response) {
+int cmd_RmvDoente(struct ListaDoente *listaD, struct ListaRegisto *listR, char *filepathD, char *filepathR, char *name, char *response) {
     /* Searches for doente by name in "lista" and removes it
      * 
      * Returns:
@@ -148,6 +159,25 @@ int cmd_RmvDoente(struct ListaDoente *listaD, struct ListaRegisto *listR, char *
 
 
     sprintf(response+strlen(response), "Doente \"%s\" removed from system\n(all \"registos\" for this user deleted as well)", name);
+    
+    // save Doentes to file
+    sortListDoenteID(listaD);
+    if (ListaDoente_toFile(filepathD, listaD)!=0) {
+        sprintf(response+strlen(response), "\n->!ERROR!\n\t-> Error saving to file\n");
+        return -1;
+    } else {
+        sprintf(response+strlen(response), "\n\t-> Data saved to file\n");
+    }
+
+    // save Registos to file
+    sortListRegistoID(listR);
+    if (ListaRegisto_toFile(filepathR, listR)!=0) {
+        sprintf(response+strlen(response), "\n->!ERROR!\n\t-> Error saving to file\n");
+        return -1;
+    } else {
+        sprintf(response+strlen(response), "\n\t-> Data saved to file\n");
+    }
+
     return 0;
 }
 
@@ -260,7 +290,7 @@ int cmd_displayDoente(struct ListaDoente *listaD, struct ListaRegisto *listaR, c
     return cmd_listTens(listaD, listaR, auxbuff, -1, response);
 }
 
-int cmd_AddRegisto(struct ListaDoente *listaD, struct ListaRegisto *listaR, int id, char *date_char, int tens_max, int tens_min, int weight, int height, char *response) {
+int cmd_AddRegisto(struct ListaDoente *listaD, struct ListaRegisto *listaR, char *filepath, int id, char *date_char, int tens_max, int tens_min, int weight, int height, char *response) {
     /* Adds a registo to the list.
      * Only adds new registo if a doente with the same ID exists in the system
      * 
@@ -308,6 +338,15 @@ int cmd_AddRegisto(struct ListaDoente *listaD, struct ListaRegisto *listaR, int 
     }
     
     sprintf(response+strlen(response), "Registo added to system\n");
+
+    // save Registos to file
+    sortListRegistoID(listaR);
+    if (ListaRegisto_toFile(filepath, listaR)!=0) {
+        sprintf(response+strlen(response), "\n->!ERROR!\n\t-> Error saving to file\n");
+        return -1;
+    } else {
+        sprintf(response+strlen(response), "\n\t-> Data saved to file\n");
+    }
     return 0;
 }
 

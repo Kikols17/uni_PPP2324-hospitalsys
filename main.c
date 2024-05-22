@@ -51,6 +51,8 @@ int main() {
     destroyListaDoente(ListD);
     destroyListaRegisto(ListR);
 
+
+
     return 0;
 }
 
@@ -117,7 +119,7 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
                                                "\n\t\t(make sure that \"name\" is between \"\")\n");
             return 2;
         }
-        if ( cmd_AddDoente(ListD, arg1, arg2, arg3, atoi(arg4), arg5, response)<0 ) {
+        if ( cmd_AddDoente(ListD, DOENTE_FILEPATH, arg1, arg2, arg3, atoi(arg4), arg5, response)<0 ) {
             //sprintf(response+strlen(response), "!!Error!! on add_doente command\n");
             return 3;
         }
@@ -135,7 +137,7 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
                                                "\n\t\t(make sure that \"name\" is between \"\")\n");
             return 2;
         }
-        if ( cmd_RmvDoente(ListD, ListR, arg1, response)<0 ) {
+        if ( cmd_RmvDoente(ListD, ListR, DOENTE_FILEPATH, REGISTO_FILEPATH, arg1, response)<0 ) {
             //sprintf(response+strlen(response), "!!Error!! on rmv_doente command\n");
             return 3;
         }
@@ -202,7 +204,7 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
             sprintf(response+strlen(response), "Invalid format:\n\t-> add_registo <id> <date> <tens_max> <tens_min> <weight> <height>\n");
             return 2;
         }
-        if ( cmd_AddRegisto(ListD, ListR, atoi(arg1), arg2, atoi(arg3), atoi(arg4), atoi(arg5), atoi(arg6), response)<0 ) {
+        if ( cmd_AddRegisto(ListD, ListR, REGISTO_FILEPATH, atoi(arg1), arg2, atoi(arg3), atoi(arg4), atoi(arg5), atoi(arg6), response)<0 ) {
             //sprintf(response+strlen(response), "!!Error!! on add_registo command\n");
             return 3;
         }
