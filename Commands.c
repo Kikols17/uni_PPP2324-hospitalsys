@@ -10,7 +10,7 @@
 #include "Registo_struct.h"
 #include "Data_struct.h"
 
-
+//add_doente "Nunu Diospiro" 15/9/2006 12345678-1-BBB 123456789 pimbas@tuga.com
 
 
 int cmd_help(char *response) {
@@ -118,10 +118,10 @@ int cmd_AddDoente(struct ListaDoente *listaD, char *filepath, char *name, char *
     // save Doentes to file
     sortListDoenteID(listaD);
     if ( ListaDoente_toFile(filepath, listaD)!=0 ) {
-        sprintf(response+strlen(response), "->!ERROR!\n\t-> Error saving to file\n");
+        sprintf(response+strlen(response), "\t->!ERROR!\n\t-> Error saving to file\n");
         return -1;
     } else {
-        sprintf(response+strlen(response), "\n\t-> Data saved to file\n");
+        sprintf(response+strlen(response), "\t-> Data saved to file\n");
     }
     return 0;
 }
@@ -148,34 +148,39 @@ int cmd_RmvDoente(struct ListaDoente *listaD, struct ListaRegisto *listR, char *
     sortListRegistoID(listR);
     struct NodeRegisto *curR = findIDListRegisto(listR, node->doente->id);  // find first registo from doente with ID "id"
     struct NodeRegisto *nextR;
-    while ( curR!=NULL && curR->registo->id==node->doente->id ) {
-        // remove all registo's from doente with ID "id"
-        nextR = curR->next;
-        if (destroyNodeRegisto(listR, curR)!=0) {
-            printf("Error destroying registo\n");
+    int regs_removed=0;
+    if (curR!=NULL) {
+        // Doente has registos, delete them
+        while ( curR!=NULL && curR->registo->id==node->doente->id ) {
+            // remove all registo's from doente with ID "id"
+            nextR = curR->next;
+            if (destroyNodeRegisto(listR, curR)!=0) {
+                printf("Error destroying registo\n");
+            }
+            curR = nextR;
+            regs_removed++;
         }
-        curR = nextR;
     }
 
 
-    sprintf(response+strlen(response), "Doente \"%s\" removed from system\n(all \"registos\" for this user deleted as well)", name);
+    sprintf(response+strlen(response), "Doente \"%s\" removed from system\n(all %d \"registos\" for this user deleted as well)\n", name, regs_removed);
     
     // save Doentes to file
     sortListDoenteID(listaD);
     if (ListaDoente_toFile(filepathD, listaD)!=0) {
-        sprintf(response+strlen(response), "\n->!ERROR!\n\t-> Error saving to file\n");
+        sprintf(response+strlen(response), "\t->!ERROR!\n\t-> Error saving to file\n");
         return -1;
     } else {
-        sprintf(response+strlen(response), "\n\t-> Data saved to file\n");
+        sprintf(response+strlen(response), "\t-> Data saved to file\n");
     }
 
     // save Registos to file
     sortListRegistoID(listR);
     if (ListaRegisto_toFile(filepathR, listR)!=0) {
-        sprintf(response+strlen(response), "\n->!ERROR!\n\t-> Error saving to file\n");
+        sprintf(response+strlen(response), "\t->!ERROR!\n\t-> Error saving to file\n");
         return -1;
     } else {
-        sprintf(response+strlen(response), "\n\t-> Data saved to file\n");
+        sprintf(response+strlen(response), "\t-> Data saved to file\n");
     }
 
     return 0;
@@ -342,10 +347,10 @@ int cmd_AddRegisto(struct ListaDoente *listaD, struct ListaRegisto *listaR, char
     // save Registos to file
     sortListRegistoID(listaR);
     if (ListaRegisto_toFile(filepath, listaR)!=0) {
-        sprintf(response+strlen(response), "\n->!ERROR!\n\t-> Error saving to file\n");
+        sprintf(response+strlen(response), "\t->!ERROR!\n\t-> Error saving to file\n");
         return -1;
     } else {
-        sprintf(response+strlen(response), "\n\t-> Data saved to file\n");
+        sprintf(response+strlen(response), "\t-> Data saved to file\n");
     }
     return 0;
 }
