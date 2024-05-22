@@ -158,14 +158,14 @@ int request_handler(struct ListaDoente *ListD, struct ListaRegisto *ListR, char 
 
     } else if ( strcmp(command, "list_tens")==0 ) {
         // LIST_TENS
-        arg1 = strtok(NULL, " ");
+        arg1 = strtok(NULL, "\"");
         arg2 = strtok(NULL, " ");
         end = strtok(NULL, " ");
         if ( arg1==NULL || arg2==NULL || end!=NULL ) {
-            sprintf(response+strlen(response), "Invalid format:\n\t-> list_tens <id> <min_tension>\n");
+            sprintf(response+strlen(response), "Invalid format:\n\t-> list_tens \"name\" <min_tension>\n");
             return 2;
         }
-        if ( cmd_listTens(ListD, ListR, atoi(arg1), atoi(arg2), response)<0 ) {
+        if ( cmd_listTens(ListD, ListR, arg1, atoi(arg2), response)<0 ) {
             //sprintf(response+strlen(response), "!!Error!! on list_tens command\n");
             return 3;
         }

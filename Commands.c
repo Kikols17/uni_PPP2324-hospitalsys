@@ -21,9 +21,9 @@ int cmd_help(char *response) {
                                        "\t-> add_doente \"name\" <birthday> <cc> <tele> <email>\n"
                                        "\t-> rmv_doente \"name\"\n"
                                        "\t-> list\n"
-                                       "\t-> list_tens <id> <min_tension>\n"
+                                       "\t-> list_tens \"name\" <min_tension>\n"
                                        "\t-> display_doente \"name\"\n"
-                                       "\t-> add_registo\n");
+                                       "\t-> add_registo <id> <date> <tens_max> <tens_min> <weight> <height>\n");
     return 0;
 }
 
@@ -171,7 +171,7 @@ int cmd_listAlpha(struct ListaDoente *listaD, char *response) {
     return 0;
 }
 
-int cmd_listTens(struct ListaDoente *listaD, struct ListaRegisto *listaR, int id, int min_tension, char *response) {
+int cmd_listTens(struct ListaDoente *listaD, struct ListaRegisto *listaR, char *name, int min_tension, char *response) {
     /* Creates a temporary ListRegisto with all registo's from doente with ID "id" with tension above "min_tension"
      * Returns:
      *      -> -1 if error on creation of temporary list
@@ -181,9 +181,11 @@ int cmd_listTens(struct ListaDoente *listaD, struct ListaRegisto *listaR, int id
     struct NodeDoente *curD;
     struct NodeRegisto *curR;
     struct ListaRegisto *tempList;
+    char auxbuff[DATA_STRING_SIZE];
 
     // find first registo from doente with ID "id"
-    curD = findIDListDoente(listaD, id);
+    strcpy(auxbuff, name);
+    curD = findNameListDoente(listaD, auxbuff);
     if ( curD==NULL ) {
         // Doente by ID not in system
         sprintf(response+strlen(response), "->!ERROR!\n\t-> Doente not in system\n");
@@ -192,10 +194,10 @@ int cmd_listTens(struct ListaDoente *listaD, struct ListaRegisto *listaR, int id
 
     // sort list by ID, so that all registo's from doente with ID "id" are together
     sortListRegistoID(listaR);
-    curR = findIDListRegisto(listaR, id);
+    curR = findIDListRegisto(listaR, curD->doente->id);
     if ( curR==NULL ) {
         // Registo by ID not in system
-        sprintf(response+strlen(response), "->Doente \"%s\" with id %d does not have any registos\n", curD->doente->name, id);
+        sprintf(response+strlen(response), "->Doente \"%s\" with id %d does not have any registos\n", curD->doente->name, curD->doente->id);
         return 1;
     }
 
@@ -207,7 +209,7 @@ int cmd_listTens(struct ListaDoente *listaD, struct ListaRegisto *listaR, int id
     }
 
     // push all registo's with id and tension above "min_tension" to temporary list
-    while ( curR!=NULL && curR->registo->id==id ) {
+    while ( curR!=NULL && curR->registo->id==curD->doente->id ) {
         if ( curR->registo->tens_max>=min_tension ) {
             // pushes true copy of registo to temporary list (must be true copy to avoid freeing at end of function)
             if ( pushListaRegisto(tempList, createNodeRegisto( createCopyRegisto(curR->registo) ))!=0 ) {
@@ -223,7 +225,7 @@ int cmd_listTens(struct ListaDoente *listaD, struct ListaRegisto *listaR, int id
     // print temporary list
     if ( min_tension!=-1 ) {
         // if min_tension is -1, don't print the message, it means we want to list all registo's from doente with ID "id"
-        sprintf(response+strlen(response), "Registo's from doente \"%s\" with ID%d with tension above %d:\n", curD->doente->name, id, min_tension);
+        sprintf(response+strlen(response), "Registo's from doente \"%s\" with ID%d with tension above %d:\n", curD->doente->name, curD->doente->id, min_tension);
     }
     tostrListaRegisto(tempList, response+strlen(response));
 
@@ -255,7 +257,7 @@ int cmd_displayDoente(struct ListaDoente *listaD, struct ListaRegisto *listaR, c
 
     // fetch all registo's from doente with ID "id".
     sprintf(response+strlen(response), "\nRegistos:\n");
-    return cmd_listTens(listaD, listaR, node->doente->id, -1, response);
+    return cmd_listTens(listaD, listaR, auxbuff, -1, response);
 }
 
 int cmd_AddRegisto(struct ListaDoente *listaD, struct ListaRegisto *listaR, int id, char *date_char, int tens_max, int tens_min, int weight, int height, char *response) {
