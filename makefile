@@ -20,21 +20,6 @@ files:
 
 
 
-DOENTE_TEST: Doente_struct.o Data_struct.o
-	gcc -Wall -Wextra -c DOENTES_TESTC.c
-	gcc -Wall -Wextra DOENTES_TESTC.o Doente_struct.o Data_struct.o -o test.exe
-
-REGISTO_TEST: Registo_struct.o Data_struct.o
-	gcc -Wall -Wextra -c REGISTO_TESTC.c
-	gcc -Wall -Wextra REGISTO_TESTC.o Registo_struct.o Data_struct.o -o test.exe
-
-COMMANDS_TEST: Commands.o Doente_struct.o Registo_struct.o Data_struct.o
-	gcc -Wall -Wextra -c COMMANDS_TESTC.c
-	gcc -Wall -Wextra COMMANDS_TESTC.o Commands.o Doente_struct.o Registo_struct.o Data_struct.o -o test.exe
-
-
-
-
 main.o: main.c
 	gcc -Wall -Wextra -c main.c
 
